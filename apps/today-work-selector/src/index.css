@@ -1,0 +1,462 @@
+/* ============================================================
+   index.css — Today Work Selector グローバルスタイル
+   ============================================================ */
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --color-bg: #f8f9fa;
+  --color-surface: #ffffff;
+  --color-surface-2: #f1f3f5;
+  --color-border: #dee2e6;
+  --color-primary: #2563eb;
+  --color-primary-hover: #1d4ed8;
+  --color-primary-light: #dbeafe;
+  --color-secondary: #64748b;
+  --color-success: #16a34a;
+  --color-success-light: #dcfce7;
+  --color-warning: #d97706;
+  --color-warning-light: #fef3c7;
+  --color-danger: #dc2626;
+  --color-text: #1e293b;
+  --color-text-muted: #64748b;
+  --radius: 8px;
+  --radius-lg: 12px;
+  --shadow: 0 1px 3px rgba(0,0,0,0.1), 0 1px 2px rgba(0,0,0,0.06);
+  --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
+}
+
+html {
+  font-size: 16px;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Hiragino Kaku Gothic ProN',
+    'Hiragino Sans', 'Meiryo', sans-serif;
+  background: var(--color-bg);
+  color: var(--color-text);
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+/* ---- Layout ---- */
+.app-container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 16px;
+}
+
+.app-header {
+  background: var(--color-primary);
+  color: #fff;
+  padding: 16px 20px;
+  border-radius: var(--radius-lg);
+  margin-bottom: 24px;
+  box-shadow: var(--shadow-md);
+}
+
+.app-header h1 {
+  font-size: 1.4rem;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.app-header p {
+  font-size: 0.85rem;
+  opacity: 0.85;
+}
+
+.section-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: 20px;
+  margin-bottom: 20px;
+  box-shadow: var(--shadow);
+}
+
+.section-title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--color-text);
+  margin-bottom: 16px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid var(--color-primary-light);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.section-title .step-badge {
+  background: var(--color-primary);
+  color: #fff;
+  font-size: 0.75rem;
+  font-weight: 700;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+/* ---- Button Group (toggle buttons) ---- */
+.btn-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.field-label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 6px;
+}
+
+.toggle-btn {
+  padding: 8px 14px;
+  border: 2px solid var(--color-border);
+  border-radius: 20px;
+  background: var(--color-surface);
+  color: var(--color-text);
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  font-family: inherit;
+  line-height: 1;
+}
+
+.toggle-btn:hover {
+  border-color: var(--color-primary);
+  background: var(--color-primary-light);
+}
+
+.toggle-btn.active {
+  border-color: var(--color-primary);
+  background: var(--color-primary);
+  color: #fff;
+  font-weight: 600;
+}
+
+/* ---- State Grid ---- */
+.state-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.state-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+/* ---- Recommend Cards ---- */
+.recommend-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.project-card {
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  padding: 14px 16px;
+  background: var(--color-surface-2);
+  transition: box-shadow 0.15s;
+}
+
+.project-card:hover {
+  box-shadow: var(--shadow-md);
+}
+
+.project-card-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+  flex-wrap: wrap;
+}
+
+.project-rank {
+  background: var(--color-primary);
+  color: #fff;
+  font-size: 0.75rem;
+  font-weight: 700;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.project-name {
+  font-weight: 700;
+  font-size: 0.95rem;
+}
+
+.project-area-badge {
+  font-size: 0.7rem;
+  padding: 2px 8px;
+  border-radius: 10px;
+  background: var(--color-primary-light);
+  color: var(--color-primary);
+  font-weight: 600;
+  margin-left: auto;
+}
+
+.project-next-action {
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+  margin-top: 4px;
+}
+
+.project-next-action strong {
+  color: var(--color-text);
+}
+
+.project-meta {
+  display: flex;
+  gap: 6px;
+  margin-top: 8px;
+  flex-wrap: wrap;
+}
+
+/* ---- Priority / Energy badges ---- */
+.badge {
+  display: inline-block;
+  font-size: 0.7rem;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-weight: 600;
+}
+
+.badge-high { background: #fee2e2; color: #991b1b; }
+.badge-medium { background: #fef3c7; color: #92400e; }
+.badge-low { background: #dcfce7; color: #166534; }
+.badge-energy { background: #ede9fe; color: #5b21b6; }
+.badge-output { background: #f0fdf4; color: #166534; }
+
+/* ---- Prompt Section ---- */
+.prompt-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 16px;
+}
+
+.tab-btn {
+  padding: 7px 14px;
+  border: 2px solid var(--color-border);
+  border-radius: 6px;
+  background: var(--color-surface);
+  color: var(--color-text-muted);
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: all 0.15s;
+  font-family: inherit;
+  font-weight: 600;
+}
+
+.tab-btn:hover {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}
+
+.tab-btn.active {
+  border-color: var(--color-primary);
+  background: var(--color-primary);
+  color: #fff;
+}
+
+.prompt-box {
+  position: relative;
+  background: #1e293b;
+  border-radius: var(--radius);
+  padding: 16px;
+  overflow: hidden;
+}
+
+.prompt-text {
+  font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+  font-size: 0.8rem;
+  line-height: 1.7;
+  color: #e2e8f0;
+  white-space: pre-wrap;
+  word-break: break-word;
+  max-height: 400px;
+  overflow-y: auto;
+  margin: 0;
+}
+
+.copy-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  padding: 6px 14px;
+  background: var(--color-primary);
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s;
+  font-family: inherit;
+}
+
+.copy-btn:hover {
+  background: var(--color-primary-hover);
+}
+
+.copy-btn.copied {
+  background: var(--color-success);
+}
+
+/* ---- Action Buttons ---- */
+.action-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.btn {
+  padding: 10px 20px;
+  border: none;
+  border-radius: var(--radius);
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s;
+  font-family: inherit;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.btn-primary {
+  background: var(--color-primary);
+  color: #fff;
+}
+
+.btn-primary:hover {
+  background: var(--color-primary-hover);
+}
+
+.btn-secondary {
+  background: var(--color-surface-2);
+  color: var(--color-text);
+  border: 1px solid var(--color-border);
+}
+
+.btn-secondary:hover {
+  background: var(--color-border);
+}
+
+.btn-danger {
+  background: #fee2e2;
+  color: var(--color-danger);
+  border: 1px solid #fecaca;
+}
+
+.btn-danger:hover {
+  background: #fecaca;
+}
+
+/* ---- Save Status ---- */
+.save-status {
+  font-size: 0.8rem;
+  color: var(--color-text-muted);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  background: var(--color-surface-2);
+  border-radius: var(--radius);
+  border: 1px solid var(--color-border);
+}
+
+.save-status.saved {
+  color: var(--color-success);
+  background: var(--color-success-light);
+  border-color: #bbf7d0;
+}
+
+/* ---- Empty State ---- */
+.empty-state {
+  text-align: center;
+  padding: 32px 16px;
+  color: var(--color-text-muted);
+}
+
+.empty-state p {
+  font-size: 0.9rem;
+}
+
+/* ---- Scrollbar ---- */
+.prompt-text::-webkit-scrollbar {
+  width: 6px;
+}
+.prompt-text::-webkit-scrollbar-track {
+  background: #334155;
+  border-radius: 3px;
+}
+.prompt-text::-webkit-scrollbar-thumb {
+  background: #64748b;
+  border-radius: 3px;
+}
+
+/* ---- Responsive ---- */
+@media (max-width: 600px) {
+  .app-container {
+    padding: 12px;
+  }
+
+  .app-header h1 {
+    font-size: 1.2rem;
+  }
+
+  .state-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .section-card {
+    padding: 14px;
+  }
+
+  .toggle-btn {
+    padding: 7px 12px;
+    font-size: 0.82rem;
+  }
+
+  .prompt-text {
+    font-size: 0.75rem;
+    max-height: 300px;
+  }
+
+  .action-row {
+    flex-direction: column;
+  }
+
+  .btn {
+    width: 100%;
+    justify-content: center;
+  }
+}
