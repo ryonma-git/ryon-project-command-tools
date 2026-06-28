@@ -10,19 +10,22 @@ export const INITIAL_INCIDENT: IncidentInfo = {
 };
 
 export const INITIAL_CHECK_ITEMS: CheckItem[] = [
-  { id: 'c01', label: '管理職に共有した', checked: false, checkedAt: null },
-  { id: 'c02', label: '学年・担任に共有した', checked: false, checkedAt: null },
-  { id: 'c03', label: '最終確認場所を記録した', checked: false, checkedAt: null },
-  { id: 'c04', label: '最終確認時刻を記録した', checked: false, checkedAt: null },
-  { id: 'c05', label: '校内放送の要否を確認した', checked: false, checkedAt: null },
-  { id: 'c06', label: '出入口・門・職員室周辺を確認した', checked: false, checkedAt: null },
-  { id: 'c07', label: 'トイレ・特別教室・体育館・運動場を確認した', checked: false, checkedAt: null },
-  { id: 'c08', label: '捜索担当を割り振った', checked: false, checkedAt: null },
-  { id: 'c09', label: '捜索済みエリアを記録した', checked: false, checkedAt: null },
-  { id: 'c10', label: '保護者連絡の要否を管理職と確認した', checked: false, checkedAt: null },
-  { id: 'c11', label: '教育委員会連絡の要否を確認した', checked: false, checkedAt: null },
-  { id: 'c12', label: '警察連絡の基準を確認した', checked: false, checkedAt: null },
-  { id: 'c13', label: '対応ログを残した', checked: false, checkedAt: null },
+  // ---- 緊急（critical） ----
+  { id: 'c01', label: '管理職に共有した', checked: false, checkedAt: null, priority: 'critical' },
+  { id: 'c02', label: '学年・担任に共有した', checked: false, checkedAt: null, priority: 'critical' },
+  { id: 'c03', label: '最終確認場所を記録した', checked: false, checkedAt: null, priority: 'critical' },
+  { id: 'c04', label: '最終確認時刻を記録した', checked: false, checkedAt: null, priority: 'critical' },
+  { id: 'c05', label: '校内放送の要否を確認した', checked: false, checkedAt: null, priority: 'critical' },
+  // ---- 高優先度（high） ----
+  { id: 'c06', label: '出入口・門・職員室周辺を確認した', checked: false, checkedAt: null, priority: 'high' },
+  { id: 'c07', label: 'トイレ・特別教室・体育館・運動場を確認した', checked: false, checkedAt: null, priority: 'high', requiresRecheck: true },
+  { id: 'c08', label: '捜索担当を割り振った', checked: false, checkedAt: null, priority: 'high' },
+  { id: 'c09', label: '捜索済みエリアを記録した', checked: false, checkedAt: null, priority: 'high' },
+  { id: 'c10', label: '保護者連絡の要否を管理職と確認した', checked: false, checkedAt: null, priority: 'high' },
+  // ---- 通常（normal） ----
+  { id: 'c11', label: '教育委員会連絡の要否を確認した', checked: false, checkedAt: null, priority: 'normal' },
+  { id: 'c12', label: '警察連絡の基準を確認した', checked: false, checkedAt: null, priority: 'normal' },
+  { id: 'c13', label: '対応ログを残した', checked: false, checkedAt: null, priority: 'normal' },
 ];
 
 export const INITIAL_SEARCH_AREAS: SearchArea[] = [

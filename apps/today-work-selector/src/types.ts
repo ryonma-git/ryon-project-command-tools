@@ -15,6 +15,16 @@ export type Mood =
   | 'キャリアを進めたい'
   | '何も決められない';
 
+export type WorkMode =
+  | 'おまかせ'
+  | '校務opsを進めたい'
+  | 'personal-memoryを進めたい'
+  | 'MaruFlowを進めたい'
+  | '学校安全を進めたい'
+  | '授業実践を進めたい'
+  | 'キャリアを進めたい'
+  | '生活基盤を整えたい';
+
 export type ProjectArea =
   | '校務'
   | '授業'
@@ -47,6 +57,21 @@ export interface ProjectPrompts {
   codex?: string;
   claudeCode?: string;
   manus?: string;
+  reflection?: string;
+}
+
+/** プロジェクトに向いている状況の詳細 */
+export interface SuitableForDetail {
+  lowEnergy?: boolean;
+  mediumEnergy?: boolean;
+  highEnergy?: boolean;
+  school?: boolean;
+  home?: boolean;
+  outside?: boolean;
+  codex?: boolean;
+  claudeCode?: boolean;
+  manus?: boolean;
+  chatgptOnly?: boolean;
 }
 
 export interface Project {
@@ -57,20 +82,22 @@ export interface Project {
   priority: Priority;
   energy: EnergyRequired;
   nextAction: string;
-  /** @deprecated Use recommendedContexts */
-  recommendedContext?: AgentAvailability[];
   /** 推奨エージェント（複数） */
   recommendedContexts: AgentAvailability[];
-  /** @deprecated Use outputTypes */
-  outputType?: OutputType[];
   /** 出力形式（複数） */
   outputTypes: OutputType[];
   notes: string;
   preferredLocation?: Location[];
   /** リスクレベル */
   risk?: RiskLevel;
-  /** このプロジェクトに向いている状況・条件 */
+  /** このプロジェクトに向いている状況・条件（テキスト） */
   suitableFor?: string;
+  /** このプロジェクトに向いている状況・条件（詳細フラグ） */
+  suitableForDetail?: SuitableForDetail;
+  /** デフォルトゴール */
+  defaultGoals?: string[];
+  /** 今日やらないこと */
+  avoidToday?: string[];
   /** プロジェクト固有のプロンプトテンプレート */
   prompts?: ProjectPrompts;
 }
@@ -81,6 +108,7 @@ export interface TodayState {
   location: Location;
   agent: AgentAvailability;
   mood: Mood;
+  mode: WorkMode;
 }
 
 export interface PromptSet {
@@ -96,4 +124,5 @@ export interface AppState {
   selectedProjects: string[]; // project ids
   prompts: PromptSet | null;
   savedAt: string | null;
+  favoriteProjectIds: string[];
 }

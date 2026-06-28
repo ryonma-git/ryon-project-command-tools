@@ -1,3 +1,6 @@
+// ============================================================
+// App.tsx — MaruFlow MVP Mock
+// ============================================================
 import { useState } from 'react';
 import type { Screen } from './types';
 import HomeScreen         from './screens/HomeScreen';
@@ -5,6 +8,8 @@ import PdfRegisterScreen  from './screens/PdfRegisterScreen';
 import ScoringSetupScreen from './screens/ScoringSetupScreen';
 import ScoringScreen      from './screens/ScoringScreen';
 import OutputScreen       from './screens/OutputScreen';
+import StatisticsScreen   from './screens/StatisticsScreen';
+import HistoryScreen      from './screens/HistoryScreen';
 
 const NAV_ITEMS: { label: string; screen: Screen }[] = [
   { label: 'ホーム',     screen: 'home'          },
@@ -12,6 +17,8 @@ const NAV_ITEMS: { label: string; screen: Screen }[] = [
   { label: '採点欄設定', screen: 'scoring-setup' },
   { label: '採点',       screen: 'scoring'       },
   { label: '出力確認',   screen: 'output'        },
+  { label: '統計',       screen: 'statistics'    },
+  { label: '履歴',       screen: 'history'       },
 ];
 
 export default function App() {
@@ -24,6 +31,8 @@ export default function App() {
       case 'scoring-setup': return <ScoringSetupScreen onNavigate={setScreen} />;
       case 'scoring':       return <ScoringScreen      onNavigate={setScreen} />;
       case 'output':        return <OutputScreen       onNavigate={setScreen} />;
+      case 'statistics':    return <StatisticsScreen   onNavigate={setScreen} />;
+      case 'history':       return <HistoryScreen      onNavigate={setScreen} />;
     }
   };
 

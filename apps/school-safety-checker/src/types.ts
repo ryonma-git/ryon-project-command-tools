@@ -29,20 +29,25 @@ export interface IncidentInfo {
 }
 
 // チェックリスト項目
+export type CheckPriority = 'critical' | 'high' | 'normal';
+
 export interface CheckItem {
   id: string;
   label: string;
   checked: boolean;
   checkedAt: string | null;
+  priority?: CheckPriority;
+  requiresRecheck?: boolean;
 }
 
 // 捜索エリアのステータス
-export type AreaStatus = 'unchecked' | 'checking' | 'checked';
+export type AreaStatus = 'unchecked' | 'checking' | 'checked' | 'requires_recheck';
 
 export const AREA_STATUS_LABELS: Record<AreaStatus, string> = {
   unchecked: '未確認',
   checking: '確認中',
   checked: '確認済み',
+  requires_recheck: '要再確認',
 };
 
 export interface SearchArea {

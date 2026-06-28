@@ -86,7 +86,7 @@ export default function App() {
   };
 
   const cycleAreaStatus = (id: string) => {
-    const cycle: AreaStatus[] = ['unchecked', 'checking', 'checked'];
+    const cycle: AreaStatus[] = ['unchecked', 'checking', 'checked', 'requires_recheck'];
     setState(s => ({
       ...s,
       searchAreas: s.searchAreas.map(a => {
@@ -283,10 +283,15 @@ export default function App() {
             <div className="progress-label">{checkedCount} / {totalCount} 完了（{progressPct}%）</div>
             <ul className="checklist">
               {state.checkItems.map(item => (
-                <li key={item.id} className="checklist-item" onClick={() => toggleCheck(item.id)}>
+                <li key={item.id} className={`checklist-item${item.priority === 'critical' ? ' priority-critical' : item.priority === 'high' ? ' priority-high' : ''}`} onClick={() => toggleCheck(item.id)}>
                   <div className={`checklist-checkbox${item.checked ? ' checked' : ''}`} />
-                  <div>
-                    <div className={`checklist-label${item.checked ? ' checked' : ''}`}>{item.label}</div>
+                  <div style={{ flex: 1 }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 6, flexWrap: 'wrap' }}>
+                      {item.priority === 'critical' && <span className="priority-badge badge-critical">緊急</span>}
+                      {item.priority === 'high' && <span className="priority-badge badge-high-p">高</span>}
+                      <div className={`checklist-label${item.checked ? ' checked' : ''}`}>{item.label}</div>
+                      {item.requiresRecheck && !item.checked && <span className="recheck-badge">要再確認</span>}
+                    </div>
                     {item.checkedAt && <div className="checklist-time">✓ {item.checkedAt}</div>}
                   </div>
                 </li>
@@ -300,7 +305,7 @@ export default function App() {
             <div className="card-title">③ 捜索エリア管理</div>
             <div className="notice">エリアをタップするたびに「未確認 → 確認中 → 確認済み」と切り替わります。</div>
             <div style={{ display: 'flex', gap: 8, marginBottom: 12, flexWrap: 'wrap' }}>
-              {(['unchecked', 'checking', 'checked'] as AreaStatus[]).map(s => {
+              {(['unchecked', 'checking', 'checked', 'requires_recheck'] as AreaStatus[]).map(s => {
                 const count = state.searchAreas.filter(a => a.status === s).length;
                 return (
                   <span key={s} className={`area-status-badge badge-${s}`}>
@@ -409,10 +414,15 @@ export default function App() {
               ))}
             </div>
             <pre className="output-pre">{outputText}</pre>
-            <button className={`copy-btn${copiedKey === outputTab ? ' copied' : ''}`}
-              onClick={() => handleCopy(outputText, outputTab)}>
-              {copiedKey === outputTab ? '✓ コピーしました' : 'クリップボードにコピー'}
-            </button>
+            <div style={{ display: 'flex', gap: 8, marginTop: 12, flexWrap: 'wrap' }}>
+              <button className={`copy-btn${copiedKey === outputTab ? ' copied' : ''}`}
+                onClick={() => handleCopy(outputText, outputTab)}>
+                {copiedKey === outputTab ? '✓ コピーしました' : 'クリップボードにコピー'}
+              </button>
+              <button className="btn btn-outline btn-sm" onClick={() => window.print()}>
+                🖨️ 印刷・ PDF保存
+              </button>
+            </div>
           </div>
         )}
 

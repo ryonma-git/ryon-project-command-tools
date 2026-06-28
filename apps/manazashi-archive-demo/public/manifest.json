@@ -1,0 +1,24 @@
+{
+  "name": "Manazashi Archive Demo",
+  "short_name": "まなざし",
+  "description": "子どものまなざし（気になる言動・成長の記録）を管理するアーカイブのデモ",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#f8fafc",
+  "theme_color": "#7c3aed",
+  "lang": "ja",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

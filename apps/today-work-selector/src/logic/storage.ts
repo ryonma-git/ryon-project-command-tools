@@ -12,6 +12,7 @@ export const DEFAULT_TODAY_STATE: TodayState = {
   location: '自宅',
   agent: 'ChatGPTのみ',
   mood: 'とにかく進めたい',
+  mode: 'おまかせ',
 };
 
 export function loadState(): AppState | null {

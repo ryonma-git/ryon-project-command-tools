@@ -3,7 +3,7 @@
 // ============================================================
 
 import { useState, useEffect, useCallback } from 'react';
-import type { TodayState, PromptSet } from './types';
+import type { TodayState, PromptSet, WorkMode } from './types';
 import { recommendProjects } from './logic/recommend';
 import { generatePrompts } from './logic/generatePrompts';
 import { loadState, saveState, clearState, DEFAULT_TODAY_STATE } from './logic/storage';
@@ -12,23 +12,54 @@ import { RecommendSection } from './components/RecommendSection';
 import { PromptSection } from './components/PromptSection';
 import { ProjectListSection } from './components/ProjectListSection';
 
+const WORK_MODES: WorkMode[] = [
+  'おまかせ',
+  '校務opsを進めたい',
+  'personal-memoryを進めたい',
+  'MaruFlowを進めたい',
+  '学校安全を進めたい',
+  '授業実践を進めたい',
+  'キャリアを進めたい',
+  '生活基盤を整えたい',
+];
+
+const FAVORITE_KEY = 'today-work-selector-favorites';
+
+function loadFavorites(): string[] {
+  try {
+    const raw = localStorage.getItem(FAVORITE_KEY);
+    return raw ? JSON.parse(raw) : [];
+  } catch {
+    return [];
+  }
+}
+
+function saveFavorites(ids: string[]) {
+  localStorage.setItem(FAVORITE_KEY, JSON.stringify(ids));
+}
+
 function App() {
-  const [todayState, setTodayState] = useState<TodayState>(DEFAULT_TODAY_STATE);
+  const [todayState, setTodayState] = useState<TodayState>({
+    ...DEFAULT_TODAY_STATE,
+    mode: 'おまかせ',
+  });
   const [prompts, setPrompts] = useState<PromptSet | null>(null);
   const [savedAt, setSavedAt] = useState<string | null>(null);
   const [saveMsg, setSaveMsg] = useState('');
+  const [favoriteIds, setFavoriteIds] = useState<string[]>([]);
 
   // 起動時に localStorage から復元
   useEffect(() => {
     const saved = loadState();
     if (saved) {
-      setTodayState(saved.todayState);
+      setTodayState({ ...saved.todayState });
       setPrompts(saved.prompts);
       setSavedAt(saved.savedAt);
     }
+    setFavoriteIds(loadFavorites());
   }, []);
 
-  const recommended = recommendProjects(todayState);
+  const recommended = recommendProjects(todayState, favoriteIds, 5);
 
   const handleGenerate = useCallback(() => {
     const generated = generatePrompts(todayState, recommended);
@@ -41,10 +72,11 @@ function App() {
       selectedProjects: recommended.map((p) => p.id),
       prompts: generated,
       savedAt: now,
+      favoriteProjectIds: favoriteIds,
     });
     setSaveMsg('保存しました');
     setTimeout(() => setSaveMsg(''), 3000);
-  }, [todayState, recommended]);
+  }, [todayState, recommended, favoriteIds]);
 
   const handleSave = useCallback(() => {
     const now = new Date().toLocaleString('ja-JP');
@@ -54,21 +86,34 @@ function App() {
       selectedProjects: recommended.map((p) => p.id),
       prompts,
       savedAt: now,
+      favoriteProjectIds: favoriteIds,
     });
     setSaveMsg('保存しました');
     setTimeout(() => setSaveMsg(''), 3000);
-  }, [todayState, recommended, prompts]);
+  }, [todayState, recommended, prompts, favoriteIds]);
 
   const handleClear = useCallback(() => {
     if (window.confirm('保存データをリセットしますか？')) {
       clearState();
-      setTodayState(DEFAULT_TODAY_STATE);
+      setTodayState({ ...DEFAULT_TODAY_STATE, mode: 'おまかせ' });
       setPrompts(null);
       setSavedAt(null);
       setSaveMsg('リセットしました');
       setTimeout(() => setSaveMsg(''), 3000);
     }
   }, []);
+
+  const handleToggleFavorite = useCallback((id: string) => {
+    setFavoriteIds((prev) => {
+      const next = prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id];
+      saveFavorites(next);
+      return next;
+    });
+  }, []);
+
+  const handleModeChange = (mode: WorkMode) => {
+    setTodayState((prev) => ({ ...prev, mode }));
+  };
 
   return (
     <div className="app-container">
@@ -78,11 +123,35 @@ function App() {
         <p>Today Work Selector — 今日やるべき作業を選んで、AIエージェントへのプロンプトを生成します</p>
       </header>
 
+      {/* WorkMode セレクター */}
+      <div className="section-card" style={{ marginBottom: '8px' }}>
+        <div className="section-title">
+          <span className="step-badge">0</span>
+          今日のモード
+        </div>
+        <div className="mode-grid">
+          {WORK_MODES.map((mode) => (
+            <button
+              key={mode}
+              type="button"
+              className={`mode-btn${todayState.mode === mode ? ' active' : ''}`}
+              onClick={() => handleModeChange(mode)}
+            >
+              {mode}
+            </button>
+          ))}
+        </div>
+      </div>
+
       {/* Step 1: 状態入力 */}
       <StateSelector state={todayState} onChange={setTodayState} />
 
       {/* Step 2: おすすめ表示 */}
-      <RecommendSection projects={recommended} />
+      <RecommendSection
+        projects={recommended}
+        favoriteIds={favoriteIds}
+        onToggleFavorite={handleToggleFavorite}
+      />
 
       {/* アクションボタン */}
       <div className="action-row">
@@ -126,7 +195,10 @@ function App() {
 
       {/* Step 4: 全プロジェクト一覧 */}
       <div style={{ marginTop: '8px' }}>
-        <ProjectListSection />
+        <ProjectListSection
+          favoriteIds={favoriteIds}
+          onToggleFavorite={handleToggleFavorite}
+        />
       </div>
 
       {/* フッター */}

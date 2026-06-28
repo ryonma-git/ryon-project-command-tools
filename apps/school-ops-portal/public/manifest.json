@@ -1,0 +1,24 @@
+{
+  "name": "School Ops Portal",
+  "short_name": "校務ポータル",
+  "description": "学校ICT・校務ナレッジをカテゴリ・タグ・全文検索で管理します",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#f8fafc",
+  "theme_color": "#2563eb",
+  "lang": "ja",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

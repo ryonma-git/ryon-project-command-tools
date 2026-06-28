@@ -6,8 +6,9 @@ import { useState } from 'react';
 import type { Project, ProjectArea } from '../types';
 import { PROJECTS } from '../data/projects';
 
-const AREA_OPTIONS: (ProjectArea | 'すべて')[] = [
+const AREA_OPTIONS: (ProjectArea | 'すべて' | 'お気に入り')[] = [
   'すべて',
+  'お気に入り',
   '校務',
   '授業',
   '開発',
@@ -32,13 +33,24 @@ const STATUS_COLOR: Record<string, string> = {
   done: '#2563eb',
 };
 
-function ProjectRow({ p }: { p: Project }) {
+interface ProjectRowProps {
+  p: Project;
+  isFav: boolean;
+  onToggleFavorite?: (id: string) => void;
+}
+
+function ProjectRow({ p, isFav, onToggleFavorite }: ProjectRowProps) {
   const [open, setOpen] = useState(false);
   return (
     <div
       style={{
         borderBottom: '1px solid var(--color-border)',
         padding: '10px 0',
+        background: isFav ? 'var(--color-primary-light)' : 'transparent',
+        borderRadius: isFav ? '6px' : '0',
+        paddingLeft: isFav ? '8px' : '0',
+        paddingRight: isFav ? '8px' : '0',
+        marginBottom: isFav ? '4px' : '0',
       }}
     >
       <div
@@ -77,6 +89,16 @@ function ProjectRow({ p }: { p: Project }) {
         >
           {STATUS_LABEL[p.status]}
         </span>
+        {onToggleFavorite && (
+          <button
+            type="button"
+            className={`fav-btn${isFav ? ' fav-btn-active' : ''}`}
+            onClick={(e) => { e.stopPropagation(); onToggleFavorite(p.id); }}
+            title={isFav ? 'お気に入りを解除' : 'お気に入りに追加'}
+          >
+            {isFav ? '★' : '☆'}
+          </button>
+        )}
         <span
           style={{
             fontSize: '0.75rem',
@@ -121,8 +143,24 @@ function ProjectRow({ p }: { p: Project }) {
               {p.suitableFor}
             </div>
           )}
+          {p.defaultGoals && p.defaultGoals.length > 0 && (
+            <div style={{ marginBottom: '4px' }}>
+              <strong>今日のゴール候補：</strong>
+              <ul style={{ margin: '4px 0 0 16px', padding: 0 }}>
+                {p.defaultGoals.map((g) => <li key={g}>{g}</li>)}
+              </ul>
+            </div>
+          )}
+          {p.avoidToday && p.avoidToday.length > 0 && (
+            <div style={{ marginBottom: '4px', color: '#b45309' }}>
+              <strong>今日やらないこと：</strong>
+              <ul style={{ margin: '4px 0 0 16px', padding: 0 }}>
+                {p.avoidToday.map((a) => <li key={a}>{a}</li>)}
+              </ul>
+            </div>
+          )}
           {p.notes && (
-            <div style={{ color: 'var(--color-text-muted)' }}>
+            <div style={{ color: 'var(--color-text-muted)', marginTop: '4px' }}>
               {p.notes}
             </div>
           )}
@@ -132,13 +170,20 @@ function ProjectRow({ p }: { p: Project }) {
   );
 }
 
-export function ProjectListSection() {
-  const [filter, setFilter] = useState<ProjectArea | 'すべて'>('すべて');
+interface Props {
+  favoriteIds?: string[];
+  onToggleFavorite?: (id: string) => void;
+}
+
+export function ProjectListSection({ favoriteIds = [], onToggleFavorite }: Props) {
+  const [filter, setFilter] = useState<ProjectArea | 'すべて' | 'お気に入り'>('すべて');
   const [showList, setShowList] = useState(false);
 
   const filtered =
     filter === 'すべて'
       ? PROJECTS
+      : filter === 'お気に入り'
+      ? PROJECTS.filter((p) => favoriteIds.includes(p.id))
       : PROJECTS.filter((p) => p.area === filter);
 
   return (
@@ -150,6 +195,11 @@ export function ProjectListSection() {
       >
         <span className="step-badge">4</span>
         全プロジェクト一覧（{PROJECTS.length}件）
+        {favoriteIds.length > 0 && (
+          <span style={{ marginLeft: '8px', fontSize: '0.75rem', color: 'var(--color-primary)' }}>
+            ★ {favoriteIds.length}件お気に入り
+          </span>
+        )}
         <span
           style={{
             marginLeft: 'auto',
@@ -168,18 +218,29 @@ export function ProjectListSection() {
               <button
                 key={area}
                 className={`toggle-btn${filter === area ? ' active' : ''}`}
-                onClick={() => setFilter(area as ProjectArea | 'すべて')}
+                onClick={() => setFilter(area as ProjectArea | 'すべて' | 'お気に入り')}
                 type="button"
                 style={{ fontSize: '0.78rem', padding: '6px 10px' }}
               >
-                {area}
+                {area === 'お気に入り' ? `★ ${area}` : area}
               </button>
             ))}
           </div>
           <div>
-            {filtered.map((p) => (
-              <ProjectRow key={p.id} p={p} />
-            ))}
+            {filtered.length === 0 ? (
+              <div className="empty-state">
+                <p>該当するプロジェクトがありません。</p>
+              </div>
+            ) : (
+              filtered.map((p) => (
+                <ProjectRow
+                  key={p.id}
+                  p={p}
+                  isFav={favoriteIds.includes(p.id)}
+                  onToggleFavorite={onToggleFavorite}
+                />
+              ))
+            )}
           </div>
         </>
       )}

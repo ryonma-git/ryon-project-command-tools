@@ -1,23 +1,20 @@
-name: Deploy Today Work Selector to GitHub Pages
-
+name: Deploy ryon-project-command-tools to GitHub Pages
 on:
   push:
     branches:
       - main
     paths:
-      - 'apps/today-work-selector/**'
+      - 'apps/**'
+      - 'index.html'
       - '.github/workflows/deploy-pages.yml'
   workflow_dispatch:
-
 permissions:
   contents: read
   pages: write
   id-token: write
-
 concurrency:
   group: "pages"
   cancel-in-progress: false
-
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -34,16 +31,40 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '22'
-          cache: 'pnpm'
-          cache-dependency-path: apps/today-work-selector/pnpm-lock.yaml
 
-      - name: Install dependencies
+      - name: Install & Build today-work-selector
         working-directory: apps/today-work-selector
-        run: pnpm install --frozen-lockfile
+        run: pnpm install --frozen-lockfile && pnpm build
 
-      - name: Build
-        working-directory: apps/today-work-selector
-        run: pnpm build
+      - name: Install & Build school-safety-checker
+        working-directory: apps/school-safety-checker
+        run: pnpm install --frozen-lockfile && pnpm build
+
+      - name: Install & Build maruflow-mock
+        working-directory: apps/maruflow-mock
+        run: pnpm install --frozen-lockfile && pnpm build
+
+      - name: Install & Build school-ops-portal
+        working-directory: apps/school-ops-portal
+        run: pnpm install --frozen-lockfile && pnpm build
+
+      - name: Install & Build manazashi-archive-demo
+        working-directory: apps/manazashi-archive-demo
+        run: pnpm install --frozen-lockfile && pnpm build
+
+      - name: Assemble dist directory
+        run: |
+          mkdir -p dist/today-work-selector
+          mkdir -p dist/school-safety-checker
+          mkdir -p dist/maruflow-mock
+          mkdir -p dist/school-ops-portal
+          mkdir -p dist/manazashi-archive-demo
+          cp -r apps/today-work-selector/dist/*    dist/today-work-selector/
+          cp -r apps/school-safety-checker/dist/*  dist/school-safety-checker/
+          cp -r apps/maruflow-mock/dist/*          dist/maruflow-mock/
+          cp -r apps/school-ops-portal/dist/*      dist/school-ops-portal/
+          cp -r apps/manazashi-archive-demo/dist/* dist/manazashi-archive-demo/
+          cp index.html dist/index.html
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
@@ -51,7 +72,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: apps/today-work-selector/dist
+          path: dist
 
   deploy:
     environment:

@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ryon-project-command-tools</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --primary: #2563eb;
+      --primary-dark: #1d4ed8;
+      --primary-light: #dbeafe;
+      --bg: #f1f5f9;
+      --surface: #ffffff;
+      --border: #e2e8f0;
+      --text: #1e293b;
+      --text-muted: #64748b;
+      --radius: 12px;
+      --shadow: 0 2px 8px rgba(0,0,0,0.10);
+      --shadow-hover: 0 8px 24px rgba(37,99,235,0.15);
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Hiragino Kaku Gothic ProN',
+        'Hiragino Sans', 'Meiryo', 'Segoe UI', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      line-height: 1.6;
+    }
+
+    header {
+      background: var(--primary);
+      color: #fff;
+      padding: 24px 32px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    }
+
+    header h1 {
+      font-size: 1.5rem;
+      font-weight: 800;
+      letter-spacing: -0.01em;
+    }
+
+    header p {
+      font-size: 0.85rem;
+      opacity: 0.85;
+      margin-top: 4px;
+    }
+
+    .container {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 40px 24px;
+    }
+
+    .section-label {
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+      margin-bottom: 16px;
+    }
+
+    .app-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 20px;
+      margin-bottom: 48px;
+    }
+
+    .app-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px;
+      text-decoration: none;
+      color: inherit;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      box-shadow: var(--shadow);
+      transition: box-shadow 0.2s, transform 0.2s, border-color 0.2s;
+    }
+
+    .app-card:hover {
+      box-shadow: var(--shadow-hover);
+      transform: translateY(-2px);
+      border-color: var(--primary);
+    }
+
+    .app-card-icon {
+      font-size: 2rem;
+      line-height: 1;
+    }
+
+    .app-card-name {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .app-card-desc {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    .app-card-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 4px;
+    }
+
+    .tag {
+      font-size: 0.68rem;
+      font-weight: 600;
+      padding: 2px 8px;
+      border-radius: 10px;
+      background: var(--primary-light);
+      color: var(--primary);
+    }
+
+    .tag-new {
+      background: #dcfce7;
+      color: #16a34a;
+    }
+
+    .tag-mock {
+      background: #fef3c7;
+      color: #d97706;
+    }
+
+    .tag-safety {
+      background: #fee2e2;
+      color: #dc2626;
+    }
+
+    .info-section {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px 24px;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      line-height: 1.7;
+    }
+
+    .info-section strong {
+      color: var(--text);
+    }
+
+    footer {
+      text-align: center;
+      padding: 24px;
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      border-top: 1px solid var(--border);
+      margin-top: 16px;
+    }
+
+    @media (max-width: 600px) {
+      header { padding: 16px 20px; }
+      header h1 { font-size: 1.2rem; }
+      .container { padding: 24px 16px; }
+      .app-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>📦 ryon-project-command-tools</h1>
+    <p>教育・校務プロトタイプスイート — 5つのツールを収録</p>
+  </header>
+
+  <div class="container">
+    <div class="section-label">ツール一覧</div>
+    <div class="app-grid">
+
+      <a class="app-card" href="./today-work-selector/">
+        <div class="app-card-icon">🎯</div>
+        <div class="app-card-name">Today Work Selector</div>
+        <div class="app-card-desc">
+          今日の気力・時間・場所・エージェントを入力して、
+          27プロジェクトの中からおすすめ作業を選び、
+          各AIエージェント向けプロンプトを生成します。
+        </div>
+        <div class="app-card-tags">
+          <span class="tag">校務</span>
+          <span class="tag">AI活用</span>
+          <span class="tag">プロンプト生成</span>
+        </div>
+      </a>
+
+      <a class="app-card" href="./school-safety-checker/">
+        <div class="app-card-icon">🏫</div>
+        <div class="app-card-name">School Safety Checker</div>
+        <div class="app-card-desc">
+          学校での所在不明・けが・不審者等の初動対応を
+          チェックリスト・捜索エリア・役割カード・経過時間で
+          サポートします。個人情報は保存しません。
+        </div>
+        <div class="app-card-tags">
+          <span class="tag tag-safety">学校安全</span>
+          <span class="tag">初動対応</span>
+          <span class="tag">印刷対応</span>
+        </div>
+      </a>
+
+      <a class="app-card" href="./maruflow-mock/">
+        <div class="app-card-icon">📝</div>
+        <div class="app-card-name">MaruFlow MVP Mock</div>
+        <div class="app-card-desc">
+          答案用紙のPDF採点支援ツールのモックアップ。
+          PDF登録・採点欄設定・採点・出力確認・統計・履歴
+          の7画面を収録しています。
+        </div>
+        <div class="app-card-tags">
+          <span class="tag tag-mock">モック</span>
+          <span class="tag">採点</span>
+          <span class="tag">統計</span>
+        </div>
+      </a>
+
+      <a class="app-card" href="./school-ops-portal/">
+        <div class="app-card-icon">🗂️</div>
+        <div class="app-card-name">School Ops Portal</div>
+        <div class="app-card-desc">
+          学校ICT・校務に関するナレッジメモを
+          カテゴリ・タグ・全文検索で管理し、
+          ChatGPT向けプロンプトを生成できます。
+        </div>
+        <div class="app-card-tags">
+          <span class="tag tag-new">NEW</span>
+          <span class="tag">ICT</span>
+          <span class="tag">ナレッジ管理</span>
+        </div>
+      </a>
+
+      <a class="app-card" href="./manazashi-archive-demo/">
+        <div class="app-card-icon">👁️</div>
+        <div class="app-card-name">Manazashi Archive Demo</div>
+        <div class="app-card-desc">
+          子どもの「まなざし」（気になる言動・成長の記録）を
+          タグ・時系列・子ども別で管理するアーカイブのデモ。
+          架空データのみ使用。
+        </div>
+        <div class="app-card-tags">
+          <span class="tag tag-new">NEW</span>
+          <span class="tag tag-mock">デモ</span>
+          <span class="tag">記録</span>
+        </div>
+      </a>
+
+    </div>
+
+    <div class="info-section">
+      <strong>⚠️ 注意事項</strong><br />
+      このスイートは個人開発のプロトタイプです。
+      実際の学校運営・危機管理・個人情報管理には、
+      学校・自治体の正式なルールとシステムに従ってください。<br /><br />
+      <strong>データの保存</strong>：各アプリのデータはブラウザのlocalStorageに保存されます（デフォルトOFF）。
+      個人情報は入力しないでください。<br /><br />
+      <strong>リポジトリ</strong>：
+      <a href="https://github.com/ryon-project/ryon-project-command-tools" style="color: var(--primary);">
+        github.com/ryon-project/ryon-project-command-tools
+      </a>
+    </div>
+  </div>
+
+  <footer>
+    ryon-project-command-tools &nbsp;|&nbsp; 教育・校務プロトタイプスイート
+  </footer>
+</body>
+</html>

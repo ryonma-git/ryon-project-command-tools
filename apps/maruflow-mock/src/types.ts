@@ -5,7 +5,9 @@ export type Screen =
   | 'pdf-register'
   | 'scoring-setup'
   | 'scoring'
-  | 'output';
+  | 'output'
+  | 'statistics'
+  | 'history';
 
 export interface Question {
   id: string;
