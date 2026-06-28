@@ -1,163 +1,216 @@
+// ============================================================
+// generateOutput.ts — 出力生成ロジック
+// ※ 個人情報を含む出力を生成しないよう設計しています
+// ============================================================
 import type { AppState } from '../types';
-import { INCIDENT_TYPE_LABELS, AREA_STATUS_LABELS } from '../types';
+import { INCIDENT_TYPE_LABELS, CHECK_CATEGORY_LABELS } from '../types';
 
-function now(): string {
+function getIncidentLabel(type: string): string {
+  return INCIDENT_TYPE_LABELS[type as keyof typeof INCIDENT_TYPE_LABELS] ?? type;
+}
+
+function nowStr(): string {
   return new Date().toLocaleString('ja-JP', {
     year: 'numeric', month: '2-digit', day: '2-digit',
     hour: '2-digit', minute: '2-digit',
   });
 }
 
-// 対応ログ（Markdown形式）
+// ---- 対応ログ（Markdown） ----
 export function generateLog(state: AppState): string {
   const { incident, checkItems, searchAreas } = state;
-  const typeLabel = incident.type ? INCIDENT_TYPE_LABELS[incident.type] : '（未選択）';
-  const checkedCount = checkItems.filter(c => c.checked).length;
-  const checkedAreas = searchAreas.filter(a => a.status === 'checked');
-  const checkingAreas = searchAreas.filter(a => a.status === 'checking');
-  const uncheckedAreas = searchAreas.filter(a => a.status === 'unchecked');
+  const typeLabel = incident.type ? getIncidentLabel(incident.type) : '未選択';
 
-  const lines: string[] = [
-    `# 学校安全初動対応ログ`,
-    ``,
-    `> ⚠️ このログには個人情報（氏名・写真・住所等）を含めないでください。`,
-    `> このアプリは初動確認の補助ツールです。正式な対応は学校・自治体のルールに従ってください。`,
-    ``,
-    `## 出力日時`,
-    `${now()}`,
-    ``,
-    `## 事案概要`,
-    `| 項目 | 内容 |`,
-    `|------|------|`,
-    `| 事案種別 | ${typeLabel} |`,
-    `| 発生時刻 | ${incident.occurredAt || '未記録'} |`,
-    `| 気づいた時刻 | ${incident.noticedAt || '未記録'} |`,
-    `| 最終確認場所 | ${incident.lastSeenLocation || '未記録'} |`,
-    ``,
-    `### 状況メモ`,
-    incident.memo ? incident.memo : '（なし）',
-    ``,
-    `## 初動チェックリスト（${checkedCount}/${checkItems.length}完了）`,
-    ``,
-    ...checkItems.map(c => {
-      const mark = c.checked ? '- [x]' : '- [ ]';
-      const time = c.checkedAt ? ` _(${c.checkedAt})_` : '';
-      return `${mark} ${c.label}${time}`;
-    }),
-    ``,
-    `## 捜索エリア状況`,
-    ``,
-    `### 確認済み（${checkedAreas.length}件）`,
-    checkedAreas.length > 0
-      ? checkedAreas.map(a => `- ✅ ${a.name}${a.memo ? `：${a.memo}` : ''}`).join('\n')
-      : '（なし）',
-    ``,
-    `### 確認中（${checkingAreas.length}件）`,
-    checkingAreas.length > 0
-      ? checkingAreas.map(a => `- 🔄 ${a.name}${a.memo ? `：${a.memo}` : ''}`).join('\n')
-      : '（なし）',
-    ``,
-    `### 未確認（${uncheckedAreas.length}件）`,
-    uncheckedAreas.length > 0
-      ? uncheckedAreas.map(a => `- ⬜ ${a.name}`).join('\n')
-      : '（なし）',
-    ``,
-    `---`,
-    `_このログはManusで構築した学校安全初動チェックアプリにより生成されました。_`,
-    `_正式な危機管理記録は学校・自治体の定める書式で別途作成してください。_`,
-  ];
+  const checkedItems = checkItems.filter(c => c.checked);
+  const uncheckedItems = checkItems.filter(c => !c.checked);
 
-  return lines.join('\n');
+  const areaLines = searchAreas.map(a => {
+    const status = a.status === 'unchecked' ? '未確認'
+      : a.status === 'checking' ? '確認中'
+      : a.status === 'checked' ? '確認済み'
+      : '要再確認';
+    return `- ${a.name}：${status}${a.memo ? `（${a.memo}）` : ''}`;
+  }).join('\n');
+
+  const checkedLines = checkedItems.map(c =>
+    `- [x] ${c.label}${c.checkedAt ? `（${c.checkedAt}）` : ''}`
+  ).join('\n');
+
+  const uncheckedLines = uncheckedItems.map(c =>
+    `- [ ] ${c.label}`
+  ).join('\n');
+
+  return `# 学校安全初動対応ログ
+
+> ⚠️ このログは初動確認の補助ツールが生成したものです。
+> 判断の自動化ではありません。通報・連絡基準は学校・自治体の正式ルールに従ってください。
+> **個人情報（氏名・写真・住所等）が含まれていないか必ず確認してください。**
+
+## 事案概要
+
+| 項目 | 内容 |
+|---|---|
+| 事案種別 | ${typeLabel} |
+| 発生時刻 | ${incident.occurredAt || '未記録'} |
+| 気づいた時刻 | ${incident.noticedAt || '未記録'} |
+| 対応開始時刻 | ${incident.startedAt ? new Date(incident.startedAt).toLocaleTimeString('ja-JP') : '未開始'} |
+| 最終確認場所 | ${incident.lastSeenLocation || '未記録'} |
+| 状況メモ | ${incident.memo || '（なし）'} |
+| 出力日時 | ${nowStr()} |
+
+## チェックリスト進捗
+
+完了：${checkedItems.length} / ${checkItems.length} 件
+
+### 完了済み
+${checkedLines || '（なし）'}
+
+### 未完了
+${uncheckedLines || '（なし）'}
+
+## 捜索エリア状況
+
+${areaLines}
+
+---
+_このログはSchool Safety Checker（初動確認補助ツール）により生成されました。_
+_正式な危機管理マニュアルではありません。_
+`;
 }
 
-// 振り返り用メモ
+// ---- 振り返りメモ（Markdown） ----
 export function generateReflection(state: AppState): string {
-  const { incident, checkItems, searchAreas } = state;
-  const typeLabel = incident.type ? INCIDENT_TYPE_LABELS[incident.type] : '（未選択）';
-  const unchecked = checkItems.filter(c => !c.checked);
-  const uncheckedAreas = searchAreas.filter(a => a.status === 'unchecked');
+  const { incident, checkItems } = state;
+  const typeLabel = incident.type ? getIncidentLabel(incident.type) : '未選択';
+  const checkedCount = checkItems.filter(c => c.checked).length;
+  const totalCount = checkItems.length;
 
-  const lines: string[] = [
-    `# 振り返り用メモ`,
-    ``,
-    `> ⚠️ 個人情報（氏名・写真・住所等）は記入しないでください。`,
-    ``,
-    `## 事案種別`,
-    typeLabel,
-    ``,
-    `## 今回の対応で良かった点`,
-    `（ここに記入してください）`,
-    ``,
-    `## 改善できた点・次回への課題`,
-    `（ここに記入してください）`,
-    ``,
-  ];
+  const uncheckedCritical = checkItems.filter(c => !c.checked && c.priority === 'critical');
+  const uncheckedHigh = checkItems.filter(c => !c.checked && c.priority === 'high');
 
-  if (unchecked.length > 0) {
-    lines.push(`## 今回チェックできなかった項目`);
-    lines.push(`以下の項目は今回チェックされていませんでした。次回の対応で意識してください。`);
-    lines.push(``);
-    unchecked.forEach(c => lines.push(`- ${c.label}`));
-    lines.push(``);
-  }
+  return `# 振り返りメモ
 
-  if (uncheckedAreas.length > 0) {
-    lines.push(`## 今回確認できなかったエリア`);
-    uncheckedAreas.forEach(a => lines.push(`- ${a.name}`));
-    lines.push(``);
-  }
+> ⚠️ このメモは初動確認の補助ツールが生成したものです。
+> 判断の自動化ではありません。
 
-  lines.push(`## 今後の対応フローへの提案`);
-  lines.push(`（ここに記入してください）`);
-  lines.push(``);
-  lines.push(`---`);
-  lines.push(`_このメモは正式な事後報告書ではありません。学校・自治体の定める書式で別途作成してください。_`);
+## 事案概要
 
-  return lines.join('\n');
+- 事案種別：${typeLabel}
+- 発生時刻：${incident.occurredAt || '未記録'}
+- 対応開始：${incident.startedAt ? new Date(incident.startedAt).toLocaleTimeString('ja-JP') : '未開始'}
+
+## 対応の振り返り
+
+チェックリスト完了率：${checkedCount} / ${totalCount}（${Math.round(checkedCount / totalCount * 100)}%）
+
+${uncheckedCritical.length > 0
+  ? `### ⚠️ 未完了の緊急項目\n${uncheckedCritical.map(c => `- ${c.label}`).join('\n')}`
+  : '### ✅ 緊急項目はすべて完了しています'}
+
+${uncheckedHigh.length > 0
+  ? `\n### 未完了の高優先度項目\n${uncheckedHigh.map(c => `- ${c.label}`).join('\n')}`
+  : ''}
+
+## 今後の課題・改善点
+
+（ここに振り返り内容を記入してください）
+
+---
+_このメモはSchool Safety Checker（初動確認補助ツール）により生成されました。_
+`;
 }
 
-// ChatGPTに貼るための事後整理プロンプト
+// ---- ChatGPTプロンプト ----
 export function generateChatGPTPrompt(state: AppState): string {
   const { incident, checkItems, searchAreas } = state;
-  const typeLabel = incident.type ? INCIDENT_TYPE_LABELS[incident.type] : '（未選択）';
+  const typeLabel = incident.type ? getIncidentLabel(incident.type) : '未選択';
   const checkedCount = checkItems.filter(c => c.checked).length;
-  const areasSummary = searchAreas
-    .map(a => `${a.name}：${AREA_STATUS_LABELS[a.status]}`)
-    .join('、');
+  const totalCount = checkItems.length;
 
-  const lines: string[] = [
-    `# ChatGPT 事後整理プロンプト`,
-    ``,
-    `> ⚠️ 以下のプロンプトをChatGPTに貼り付ける際、個人情報（氏名・写真・住所・個人を特定できる情報）は絶対に含めないでください。`,
-    ``,
-    `---`,
-    ``,
-    `以下は学校で発生した事案の初動対応記録です（個人情報は含まれていません）。`,
-    `この記録をもとに、対応の振り返りと今後の改善点を整理する手助けをしてください。`,
-    ``,
-    `## 事案概要`,
-    `- 事案種別：${typeLabel}`,
-    `- 発生時刻：${incident.occurredAt || '未記録'}`,
-    `- 気づいた時刻：${incident.noticedAt || '未記録'}`,
-    `- 最終確認場所：${incident.lastSeenLocation || '未記録'}`,
-    `- 状況メモ：${incident.memo || '（なし）'}`,
-    ``,
-    `## チェックリスト完了状況`,
-    `- 完了：${checkedCount}/${checkItems.length}項目`,
-    `- 未完了の項目：${checkItems.filter(c => !c.checked).map(c => c.label).join('、') || 'なし'}`,
-    ``,
-    `## 捜索エリア状況`,
-    `${areasSummary}`,
-    ``,
-    `## 依頼内容`,
-    `1. 今回の対応で抜け漏れがあった可能性のある点を指摘してください。`,
-    `2. 次回同様の事案が発生した際に改善できる点を提案してください。`,
-    `3. 学校の危機管理マニュアルに追記すべき内容があれば提案してください。`,
-    ``,
-    `---`,
-    `_※ このプロンプトはManusで構築した学校安全初動チェックアプリにより生成されました。_`,
-    `_※ ChatGPTの回答は参考情報です。正式な対応は学校・自治体のルールに従ってください。_`,
-  ];
+  const areaStatus = searchAreas.map(a =>
+    `${a.name}：${a.status === 'checked' ? '確認済み' : a.status === 'requires_recheck' ? '要再確認' : '未確認'}`
+  ).join('、');
 
-  return lines.join('\n');
+  return `# 学校安全初動対応 事後整理プロンプト（ChatGPT用）
+
+> ⚠️ このプロンプトを使用する際は、個人情報（氏名・写真・住所等）を含めないでください。
+> 学校外のサービスへの個人情報送信は、学校・自治体のルールに従って慎重に判断してください。
+
+---
+
+以下は学校での初動対応の記録です。この記録をもとに、事後整理・振り返りを支援してください。
+
+## 事案情報（個人情報なし）
+
+- 事案種別：${typeLabel}
+- 発生時刻：${incident.occurredAt || '未記録'}
+- 気づいた時刻：${incident.noticedAt || '未記録'}
+- 最終確認場所：${incident.lastSeenLocation || '未記録'}
+- 状況メモ：${incident.memo || '（なし）'}
+
+## 対応状況
+
+- チェックリスト完了：${checkedCount} / ${totalCount}
+- エリア確認状況：${areaStatus}
+
+## 依頼内容
+
+1. この対応の振り返りポイントを3〜5点挙げてください
+2. 次回同様の事案が発生した際の改善点を提案してください
+3. 保護者向け説明文の骨子を作成してください（個人情報なし）
+
+---
+_このプロンプトはSchool Safety Checker（初動確認補助ツール）により生成されました。_
+`;
 }
+
+// ---- JSONエクスポート ----
+export function generateJSON(state: AppState): string {
+  const exportData = {
+    exportedAt: new Date().toISOString(),
+    disclaimer: 'このデータは学校安全初動チェックアプリが生成したものです。個人情報は含まれていません。',
+    incident: {
+      type: state.incident.type,
+      occurredAt: state.incident.occurredAt,
+      noticedAt: state.incident.noticedAt,
+      lastSeenLocation: state.incident.lastSeenLocation,
+      memo: state.incident.memo,
+      startedAt: state.incident.startedAt ? new Date(state.incident.startedAt).toISOString() : null,
+    },
+    checkItems: state.checkItems.map(c => ({
+      id: c.id,
+      label: c.label,
+      category: c.category,
+      priority: c.priority,
+      checked: c.checked,
+      checkedAt: c.checkedAt,
+    })),
+    searchAreas: state.searchAreas.map(a => ({
+      id: a.id,
+      name: a.name,
+      status: a.status,
+      memo: a.memo,
+      updatedAt: a.updatedAt,
+    })),
+    summary: {
+      checkedCount: state.checkItems.filter(c => c.checked).length,
+      totalCount: state.checkItems.length,
+      areaCheckedCount: state.searchAreas.filter(a => a.status === 'checked').length,
+      totalAreaCount: state.searchAreas.length,
+    },
+  };
+  return JSON.stringify(exportData, null, 2);
+}
+
+// カテゴリ別チェックリストのグループ化
+export function groupCheckItemsByCategory(state: AppState) {
+  const groups: Record<string, typeof state.checkItems> = {};
+  for (const item of state.checkItems) {
+    if (!groups[item.category]) groups[item.category] = [];
+    groups[item.category].push(item);
+  }
+  return groups;
+}
+
+// カテゴリラベル取得
+export { CHECK_CATEGORY_LABELS };

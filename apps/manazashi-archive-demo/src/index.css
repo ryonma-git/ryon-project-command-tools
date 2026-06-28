@@ -275,3 +275,299 @@ body {
   .timeline-marker { left: -48px; width: 36px; height: 36px; font-size: 0.7rem; }
   .child-cards { grid-template-columns: 1fr; }
 }
+
+/* ============================================================
+   強化版スタイル追加 (v2)
+   ============================================================ */
+
+/* ---- タブナビゲーション (新版) ---- */
+.tab-nav {
+  display: flex;
+  overflow-x: auto;
+  background: #fff;
+  border-bottom: 2px solid #e5e7eb;
+  scrollbar-width: none;
+}
+.tab-nav::-webkit-scrollbar { display: none; }
+
+/* ---- メインコンテンツ ---- */
+.main-content { max-width: 720px; margin: 0 auto; padding: 16px; }
+
+/* ---- カード ---- */
+.card {
+  background: #fff;
+  border-radius: 10px;
+  padding: 16px;
+  margin-bottom: 16px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+}
+.card-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: #064e3b;
+  margin-bottom: 12px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid #e5e7eb;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+/* ---- 注意書き ---- */
+.notice {
+  background: #fff7ed;
+  border: 1px solid #fed7aa;
+  border-radius: 6px;
+  padding: 10px 12px;
+  font-size: 12px;
+  color: #9a3412;
+  margin-bottom: 14px;
+  line-height: 1.6;
+}
+
+/* ---- 児童カードグリッド (新版) ---- */
+.child-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 12px;
+}
+.child-meta { font-size: 11px; color: #9ca3af; margin-top: 6px; }
+
+/* ---- 児童タイプバッジ ---- */
+.child-type-badge {
+  font-size: 11px;
+  font-weight: 400;
+  background: #d1fae5;
+  color: #065f46;
+  padding: 2px 8px;
+  border-radius: 20px;
+}
+
+/* ---- フィルター ---- */
+.filter-row { margin-bottom: 12px; }
+.filter-group { margin-bottom: 10px; }
+.filter-label { font-size: 12px; font-weight: 600; color: #374151; margin-bottom: 4px; display: block; }
+.filter-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chip {
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  border: 1.5px solid #e5e7eb;
+  background: #f9fafb;
+  color: #374151;
+  cursor: pointer;
+  transition: all 0.15s;
+  font-family: inherit;
+}
+.chip:hover { border-color: #064e3b; color: #064e3b; }
+.chip.active { background: #064e3b; color: #fff; border-color: #064e3b; }
+.chip-tag { font-size: 11px; }
+.timeline-count { font-size: 12px; color: #6b7280; }
+
+/* ---- 学年セクション ---- */
+.grade-section { margin-bottom: 8px; }
+.grade-header { margin-bottom: 8px; }
+.grade-badge {
+  display: inline-block;
+  background: #064e3b;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 700;
+  padding: 4px 14px;
+  border-radius: 20px;
+}
+
+/* ---- タイムライン (新版) ---- */
+.timeline-dot {
+  position: absolute;
+  left: -20px;
+  top: 12px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: 2px solid #fff;
+  box-shadow: 0 0 0 2px #e5e7eb;
+}
+.timeline-card {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 12px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+}
+.timeline-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-bottom: 8px;
+}
+.subject-badge {
+  font-size: 11px;
+  font-weight: 700;
+  color: #fff;
+  padding: 2px 8px;
+  border-radius: 4px;
+}
+.timeline-term { font-size: 11px; color: #6b7280; }
+.timeline-event-label { font-size: 13px; font-weight: 600; color: #111827; }
+
+.record-quote {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  background: #ecfdf5;
+  border-left: 3px solid #10b981;
+  padding: 8px 10px;
+  border-radius: 0 6px 6px 0;
+  font-size: 13px;
+  color: #065f46;
+  font-style: italic;
+  margin-bottom: 8px;
+}
+.quote-icon { font-style: normal; flex-shrink: 0; }
+
+.record-workmemo {
+  font-size: 12px;
+  color: #6b7280;
+  margin-bottom: 8px;
+  display: flex;
+  gap: 6px;
+  align-items: flex-start;
+}
+.workmemo-label {
+  font-size: 10px;
+  font-weight: 700;
+  background: #fef3c7;
+  color: #92400e;
+  padding: 1px 6px;
+  border-radius: 4px;
+  flex-shrink: 0;
+}
+
+.record-teacher { margin-bottom: 8px; }
+.record-teacher p { font-size: 13px; color: #374151; line-height: 1.6; }
+
+.record-reflection {
+  background: #faf5ff;
+  border-left: 3px solid #8b5cf6;
+  padding: 8px 10px;
+  border-radius: 0 6px 6px 0;
+  margin-bottom: 8px;
+}
+.record-reflection p { font-size: 13px; color: #5b21b6; line-height: 1.6; font-style: italic; }
+
+.record-tags { display: flex; flex-wrap: wrap; gap: 4px; }
+
+/* ---- 物語スタイル選択 ---- */
+.style-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 10px;
+  margin-bottom: 12px;
+}
+.style-card {
+  border: 2px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 12px;
+  cursor: pointer;
+  transition: all 0.15s;
+  background: #f9fafb;
+}
+.style-card:hover { border-color: #064e3b; background: #ecfdf5; }
+.style-card.selected { border-color: #064e3b; background: #d1fae5; }
+.style-label { font-size: 14px; font-weight: 700; color: #064e3b; margin-bottom: 4px; }
+.style-desc { font-size: 11px; color: #6b7280; line-height: 1.5; }
+
+/* ---- 物語テキスト ---- */
+.story-pre {
+  background: #f8fafc;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  padding: 14px;
+  font-size: 13px;
+  line-height: 1.8;
+  white-space: pre-wrap;
+  word-break: break-word;
+  max-height: 500px;
+  overflow-y: auto;
+  font-family: 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', sans-serif;
+  color: #111827;
+}
+
+/* ---- スタイル比較テーブル ---- */
+.style-compare-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+.style-compare-table th {
+  background: #f3f4f6;
+  padding: 8px 10px;
+  text-align: left;
+  font-weight: 700;
+  color: #374151;
+  border-bottom: 2px solid #e5e7eb;
+}
+.style-compare-table td {
+  padding: 8px 10px;
+  border-bottom: 1px solid #e5e7eb;
+  color: #374151;
+  vertical-align: top;
+}
+
+/* ---- コピーボタン (新版) ---- */
+.copy-btn.copied { background: #d1fae5; border-color: #10b981; color: #065f46; }
+
+/* ---- 倫理ページ (新版) ---- */
+.ethics-hero {
+  text-align: center;
+  padding: 20px 16px 12px;
+}
+.ethics-icon { font-size: 40px; margin-bottom: 8px; }
+.ethics-hero h2 { font-size: 18px; font-weight: 700; color: #064e3b; }
+
+.ethics-not-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 10px;
+  margin-top: 8px;
+}
+.ethics-not-card {
+  background: #fff5f5;
+  border: 1px solid #fecaca;
+  border-radius: 8px;
+  padding: 12px;
+}
+.ethics-not-icon { font-size: 20px; margin-bottom: 6px; }
+.ethics-not-title { font-size: 13px; font-weight: 700; color: #dc2626; margin-bottom: 4px; }
+.ethics-not-desc { font-size: 12px; color: #6b7280; line-height: 1.5; }
+
+.ethics-list {
+  padding-left: 20px;
+  font-size: 14px;
+  line-height: 1.8;
+  color: #374151;
+}
+.ethics-list li { margin-bottom: 4px; }
+
+/* ---- フッター ---- */
+.app-footer {
+  text-align: center;
+  padding: 16px;
+  font-size: 11px;
+  color: #9ca3af;
+  line-height: 1.6;
+  border-top: 1px solid #e5e7eb;
+  margin-top: 24px;
+}
+
+/* ---- 印刷スタイル ---- */
+@media print {
+  .tab-nav, .filter-row, .copy-btn, .app-footer { display: none !important; }
+  .main-content { max-width: 100%; padding: 0; }
+  .card { box-shadow: none; border: 1px solid #e5e7eb; break-inside: avoid; }
+  .story-pre { max-height: none; overflow: visible; }
+}

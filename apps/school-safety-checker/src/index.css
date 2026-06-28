@@ -293,3 +293,123 @@ body {
     color: #666;
   }
 }
+
+/* ---- 事案テンプレートカード ---- */
+.template-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 10px;
+  margin-top: 10px;
+  margin-bottom: 12px;
+}
+.template-card {
+  border: 2px solid var(--color-border);
+  border-radius: 8px;
+  padding: 10px 12px;
+  cursor: pointer;
+  transition: all 0.15s;
+  background: #f9fafb;
+}
+.template-card:hover { border-color: var(--color-primary); background: #eff6ff; }
+.template-card.selected { border-color: var(--color-primary); background: #dbeafe; }
+.template-label { font-size: 14px; font-weight: 700; color: var(--color-primary-dark); margin-bottom: 4px; }
+.template-desc { font-size: 11px; color: var(--color-text-muted); line-height: 1.5; }
+.template-hint { font-size: 12px; color: var(--color-text-muted); margin-top: 4px; font-style: italic; }
+
+/* ---- 事案種別バッジ ---- */
+.incident-type-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #dbeafe;
+  color: #1e40af;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 20px;
+  margin-bottom: 12px;
+}
+.incident-type-note { font-weight: 400; color: var(--color-text-muted); }
+
+/* ---- 各画面内のインライン免責バナー ---- */
+.disclaimer-inline {
+  background: #fff7ed;
+  border-left: 4px solid #f97316;
+  padding: 8px 12px;
+  font-size: 12px;
+  color: #9a3412;
+  margin-bottom: 12px;
+  border-radius: 0 6px 6px 0;
+  line-height: 1.5;
+}
+
+/* ---- チェックリスト カテゴリ見出し ---- */
+.checklist-category { margin-bottom: 16px; }
+.checklist-category-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 8px;
+  background: #f3f4f6;
+  border-radius: 6px;
+  margin-bottom: 6px;
+}
+.category-icon { font-size: 16px; }
+.category-label { font-size: 13px; font-weight: 700; color: #374151; flex: 1; }
+.category-count { font-size: 12px; color: var(--color-text-muted); }
+
+/* ---- localStorage保存前の個人情報注意モーダル ---- */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 16px;
+}
+.modal-box {
+  background: #fff;
+  border-radius: 12px;
+  padding: 24px;
+  max-width: 480px;
+  width: 100%;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+}
+.modal-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--color-danger);
+  margin-bottom: 16px;
+}
+.modal-body {
+  font-size: 14px;
+  line-height: 1.7;
+  color: #374151;
+  margin-bottom: 20px;
+}
+.modal-body ul { padding-left: 20px; margin: 8px 0; }
+.modal-body li { margin-bottom: 4px; }
+.modal-actions { display: flex; flex-direction: column; gap: 8px; }
+
+/* ---- storage-row（トグルとラベルの横並び） ---- */
+.storage-row { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 10px; }
+
+/* ---- 印刷スタイル強化 ---- */
+@media print {
+  .disclaimer-inline { display: none !important; }
+  .modal-overlay { display: none !important; }
+  .template-grid { display: none !important; }
+  .output-tabs { display: none !important; }
+  .output-pre { max-height: none !important; overflow: visible !important; }
+  .area-grid { grid-template-columns: repeat(3, 1fr) !important; }
+  .role-grid { grid-template-columns: repeat(2, 1fr) !important; }
+  .checklist-category-header { background: #f3f4f6 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .priority-critical { background: #fff5f5 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .priority-high { background: #fffdf0 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .badge-critical { background: #fee2e2 !important; color: #991b1b !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .badge-high-p { background: #fef3c7 !important; color: #92400e !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .area-card.status-checked { background: #f0fdf4 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .area-card.status-requires_recheck { background: #fffbeb !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+}

@@ -8,6 +8,7 @@ export type IncidentType =
   | 'outdoor_missing'  // 校外所在不明
   | 'injury'           // けが
   | 'suspicious'       // 不審者
+  | 'ict_failure'      // ICT障害
   | 'other';           // その他
 
 export const INCIDENT_TYPE_LABELS: Record<IncidentType, string> = {
@@ -15,7 +16,35 @@ export const INCIDENT_TYPE_LABELS: Record<IncidentType, string> = {
   outdoor_missing: '校外所在不明',
   injury: 'けが',
   suspicious: '不審者',
+  ict_failure: 'ICT障害',
   other: 'その他',
+};
+
+// チェックリストのカテゴリ
+export type CheckCategory =
+  | 'share'       // 共有
+  | 'confirm'     // 確認
+  | 'search'      // 捜索
+  | 'contact'     // 連絡
+  | 'record'      // 記録
+  | 'followup';   // 事後対応
+
+export const CHECK_CATEGORY_LABELS: Record<CheckCategory, string> = {
+  share: '共有',
+  confirm: '確認',
+  search: '捜索',
+  contact: '連絡',
+  record: '記録',
+  followup: '事後対応',
+};
+
+export const CHECK_CATEGORY_ICONS: Record<CheckCategory, string> = {
+  share: '📢',
+  confirm: '🔍',
+  search: '🗺️',
+  contact: '📞',
+  record: '📝',
+  followup: '🔄',
 };
 
 // 事案情報（個人を特定できる情報は含まない）
@@ -38,6 +67,8 @@ export interface CheckItem {
   checkedAt: string | null;
   priority?: CheckPriority;
   requiresRecheck?: boolean;
+  category: CheckCategory;
+  applicableTo?: IncidentType[]; // 省略時は全事案種別に適用
 }
 
 // 捜索エリアのステータス
@@ -64,6 +95,7 @@ export interface RoleCard {
   title: string;
   description: string;
   assignee: string; // 入力欄あり・保存なし
+  applicableTo?: IncidentType[]; // 省略時は全事案種別に適用
 }
 
 // アプリ全体の状態

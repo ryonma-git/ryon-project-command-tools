@@ -23,4 +23,19 @@ export interface FictionalChild {
   records: LearningRecord[];
 }
 
+// 物語スタイル
+export type StoryStyle = 'gentle' | 'graduation' | 'parent';
+
+export const STORY_STYLE_LABELS: Record<StoryStyle, string> = {
+  gentle: 'やさしい文体',
+  graduation: '卒業文集風',
+  parent: '保護者にも読める説明文風',
+};
+
+export const STORY_STYLE_DESCRIPTIONS: Record<StoryStyle, string> = {
+  gentle: '本人への語りかけ（「あなたは〜」）で、温かく親しみやすい言葉で書く',
+  graduation: '卒業文集に載るような、少し改まった文体で6年間を振り返る',
+  parent: '保護者にも伝わるよう、子どもの成長を客観的に説明する文体で書く',
+};
+
 export type ViewMode = 'select' | 'timeline' | 'story' | 'ethics';
