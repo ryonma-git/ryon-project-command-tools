@@ -1,28 +1,61 @@
-# Today Work Selector - Handoff Document
+# ryon-project-command-tools - Handoff Document
 
-このドキュメントは、Manusによって作成された `Today Work Selector` アプリケーションの引き継ぎ資料です。
+このドキュメントは、Manusによって作成された `ryon-project-command-tools` リポジトリ内のアプリケーション群の引き継ぎ資料です。
 Manusの利用期限終了後、他のAIエージェント（Codex / Claude Code / ChatGPT）で開発を継続するための情報をまとめています。
 
-## 現在実装済みの機能
+## リポジトリ構成
+
+本リポジトリは、独立した複数の静的Webアプリ（React + Vite + TypeScript）を `apps/` ディレクトリ配下に格納するモノレポ構成です。
+
+- `apps/today-work-selector/` : 今日やるべき作業を選び、AIエージェントへのプロンプトを生成するアプリ
+- `apps/school-safety-checker/` : 学校安全初動チェックアプリ（児童所在不明等の初動対応補助）
+
+---
+
+## 1. Today Work Selector
+
+### 現在実装済みの機能
 1. **状態入力UI**: 時間、気力、場所、使えるエージェント、今日の気分を選択するトグルボタン。
 2. **プロジェクトデータ**: Project Command Centerで整理済みの27個のプロジェクトを内蔵（`src/data/projects.ts`）。
-3. **推薦ロジック**: 状態入力に基づき、優先度やタグを考慮して上位3つのプロジェクトを推薦するスコアリングエンジン（`src/logic/recommend.ts`）。
-4. **プロンプト生成**: 選択されたプロジェクトと状態を組み合わせて、ChatGPT、Codex、Claude Code、Manus向けの具体的なプロンプト、およびふりかえり用プロンプトを自動生成（`src/logic/generatePrompts.ts`）。
-5. **コピー機能**: 生成されたプロンプトをクリップボードにコピーするボタン（フォールバック実装済み）。
-6. **データ保存**: 選択状態と生成されたプロンプトをlocalStorageに保存・復元する機能（`src/logic/storage.ts`）。
-7. **レスポンシブデザイン**: カスタムCSS（`src/index.css`）によるスマートフォン対応のレイアウト。
-8. **プロジェクト一覧表示**: すべてのプロジェクトをカテゴリ別にフィルタリングして確認できるアコーディオンUI。
+3. **推薦ロジック**: 状態入力に基づき、優先度やタグを考慮して上位3つのプロジェクトを推薦するスコアリングエンジン。
+4. **プロンプト生成**: 選択されたプロジェクトと状態を組み合わせて、各AI向けのプロンプトを自動生成。
+5. **データ保存**: 選択状態と生成されたプロンプトをlocalStorageに保存・復元する機能。
 
-## 未実装の機能（今後の課題）
-1. プロジェクトデータの外部JSON/Notionからの動的インポート
-2. カスタムプロンプトテンプレートの編集・保存機能
-3. ふりかえり結果のMarkdownダウンロード機能
-4. PWA（Progressive Web App）としてのインストール対応
+### 今後の課題
+- プロジェクトデータの外部JSON/Notionからの動的インポート
+- PWA（Progressive Web App）としてのインストール対応
 
-## 次にやるべきこと
-1. **デプロイの実行**: GitHub PagesまたはNetlifyへのデプロイ設定を行い、オンラインで利用可能にする。
-2. **プロジェクトデータの更新**: `src/data/projects.ts` の内容を最新のProject Command Centerと同期する。
-3. **`school-safety-checker` の設計・実装**: `apps/school-safety-checker` の実装を進める（設計書は `docs/school-safety-checker-design.md` に記載）。
+---
+
+## 2. School Safety Checker
+
+### アプリの目的と設計思想
+児童所在不明・校内安全確認などの初動時に、経過時間や確認エリアを整理し、抜け漏れを減らすための**初動確認補助ツール**です。
+**※正式な危機管理マニュアルの代替ではありません。**
+
+**【重要なプライバシー設計】**
+- **個人情報を保存しない**: 児童の氏名・写真・住所などは入力させないUI設計。
+- **localStorageデフォルトOFF**: ブラウザへの保存は初期状態で無効化。ONにした場合でも役割の「担当者名」は保存対象外。
+
+### 現在実装済みの機能
+1. **事案開始・タイマー**: 発生時刻・気づいた時刻の記録と、対応開始からの経過時間表示。
+2. **初動チェックリスト**: 共有、捜索割り振り、連絡要否などのアクション項目。
+3. **捜索エリア管理**: 各エリアの状況（未確認・確認中・確認済み）をワンタップで切り替え。
+4. **役割カード**: 全体指揮、記録係、校内捜索などの担当者メモ（保存なし）。
+5. **出力機能**: 対応ログ（Markdown）、振り返りメモ、ChatGPT用事後整理プロンプトの自動生成とコピー機能。
+
+### 今後の課題
+- 各学校・自治体の正式ルールに合わせたチェックリスト項目のカスタマイズ機能
+- PWA（Progressive Web App）としてのインストール対応
+
+---
+
+## 次にやるべきこと（全体）
+
+1. **デプロイの実行**: GitHub PagesまたはNetlifyへのデプロイ設定を行い、各アプリをオンラインで利用可能にする。
+2. **運用テスト**: 実際のモバイル端末（スマートフォン・タブレット）でUIの操作性を確認する。
+
+---
 
 ## Manus終了後にCodex / Claude Code / ChatGPTで引き継ぐ方法
 
@@ -30,18 +63,18 @@ Manusの利用期限終了後、他のAIエージェント（Codex / Claude Code
 Codexはコードの変更やコマンド実行に優れています。機能追加やバグ修正を行う際は、以下のプロンプトを使用してください。
 
 ```markdown
-# Today Work Selector 開発引き継ぎ
+# アプリ開発引き継ぎ
 
 ## 概要
 このプロジェクトはReact + Vite + TypeScriptで構築された静的Webアプリです。
-ディレクトリ: `apps/today-work-selector/`
+対象ディレクトリ: `apps/school-safety-checker/` （または `apps/today-work-selector/`）
 
 ## 依頼内容
 （ここに追加したい機能や修正したいバグを記載してください）
 
 ## 制約事項
 - 外部APIや秘密情報は使用しない
-- 既存のカスタムCSS（`src/index.css`）のスタイルガイドラインに従う
+- 個人情報を保存するような機能は追加しない（school-safety-checkerの場合）
 - 変更後は必ず `pnpm build` でTypeScriptエラーがないか確認する
 ```
 
@@ -49,30 +82,31 @@ Codexはコードの変更やコマンド実行に優れています。機能追
 Claude Codeは構造の理解や大規模なリファクタリング、ドキュメントの更新に適しています。
 
 ```markdown
-# Today Work Selector アーキテクチャ引き継ぎ
+# アーキテクチャ引き継ぎ
 
 ## 概要
-React + Viteの静的Webアプリです。データは `src/data/projects.ts` にハードコードされており、`src/logic/recommend.ts` で推薦ロジックが動いています。
+React + Viteの静的Webアプリです。対象は `apps/school-safety-checker/` です。
+データは `src/data/initialData.ts` に定義されており、状態管理は `src/App.tsx` に集約されています。
 
 ## 依頼内容
-（例：プロジェクトデータを外部JSONから読み込むようにリファクタリングしたい、など）
+（例：チェックリストの項目を外部JSONから読み込むようにリファクタリングしたい、など）
 
 ## 参照ファイル
 - `src/types.ts`
-- `src/logic/recommend.ts`
-- `src/logic/generatePrompts.ts`
+- `src/App.tsx`
+- `src/logic/generateOutput.ts`
 ```
 
 ### ChatGPTで引き継ぐ場合
 ChatGPTはアイデア出しやUI/UXの改善案、プロンプト生成ロジックの調整に適しています。
 
 ```markdown
-# Today Work Selector プロンプト生成ロジックの改善
+# プロンプト・出力ロジックの改善
 
 ## 概要
-現在のプロンプト生成ロジックは `src/logic/generatePrompts.ts` にあります。
+`school-safety-checker` の出力ロジックは `src/logic/generateOutput.ts` にあります。
 
 ## 依頼内容
-現在のプロンプト出力を以下のように改善したいです。具体的なコードの修正案を提示してください。
-（例：ふりかえりプロンプトにもっと具体的な質問を追加したい）
+現在のMarkdown出力フォーマットを以下のように改善したいです。具体的なコードの修正案を提示してください。
+（例：対応ログに、各エリアの最終更新時刻も出力に含めたい）
 ```

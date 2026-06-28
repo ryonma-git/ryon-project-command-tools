@@ -8,7 +8,7 @@
 | アプリ | ディレクトリ | 状態 | 概要 |
 |--------|-------------|------|------|
 | Today Work Selector | `apps/today-work-selector/` | 実装済み | 今日やるべき作業を選び、AIエージェントへのプロンプトを生成する |
-| school-safety-checker | `apps/school-safety-checker/` | 設計中 | 学校施設の安全点検記録・管理Webアプリ |
+| School Safety Checker | `apps/school-safety-checker/` | 実装済み | 学校安全初動チェックアプリ（児童所在不明等の初動対応補助） |
 
 ## ドキュメント
 
