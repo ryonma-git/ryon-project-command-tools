@@ -9,11 +9,13 @@
 |--------|-------------|------|------|
 | Today Work Selector | `apps/today-work-selector/` | 実装済み | 今日やるべき作業を選び、AIエージェントへのプロンプトを生成する |
 | School Safety Checker | `apps/school-safety-checker/` | 実装済み | 学校安全初動チェックアプリ（児童所在不明等の初動対応補助） |
+| MaruFlow MVP Mock | `apps/maruflow-mock/` | モック実装済み | 紙テスト採点支援アプリ MaruFlow の MVP 画面モック（架空データ使用） |
 
 ## ドキュメント
 
 - `HANDOFF.md` — 引き継ぎ資料（Manus終了後の継続開発方法）
 - `docs/school-safety-checker-design.md` — school-safety-checker の設計書
+- `docs/maruflow-mvp.md` — MaruFlow の MVP 仕様書（背景・課題・画面一覧・将来拡張）
 
 ## 開発方針
 

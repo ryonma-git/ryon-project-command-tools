@@ -1,112 +1,167 @@
-# ryon-project-command-tools - Handoff Document
+# ryon-project-command-tools — Handoff Document
 
-このドキュメントは、Manusによって作成された `ryon-project-command-tools` リポジトリ内のアプリケーション群の引き継ぎ資料です。
+このドキュメントは、Manusによって作成・管理されている `ryon-project-command-tools` リポジトリ全体の引き継ぎ資料です。
 Manusの利用期限終了後、他のAIエージェント（Codex / Claude Code / ChatGPT）で開発を継続するための情報をまとめています。
+
+---
 
 ## リポジトリ構成
 
-本リポジトリは、独立した複数の静的Webアプリ（React + Vite + TypeScript）を `apps/` ディレクトリ配下に格納するモノレポ構成です。
-
-- `apps/today-work-selector/` : 今日やるべき作業を選び、AIエージェントへのプロンプトを生成するアプリ
-- `apps/school-safety-checker/` : 学校安全初動チェックアプリ（児童所在不明等の初動対応補助）
+```
+ryon-project-command-tools/
+├── apps/
+│   ├── today-work-selector/   # App 1: 今日の作業選択 & プロンプト生成
+│   ├── school-safety-checker/ # App 2: 学校安全点検（設計中）
+│   └── maruflow-mock/         # App 3: 採点支援アプリ MaruFlow MVP モック
+├── docs/
+│   ├── school-safety-checker-design.md
+│   └── maruflow-mvp.md        # MaruFlow MVP 仕様書
+├── README.md
+└── HANDOFF.md                 # このファイル
+```
 
 ---
 
-## 1. Today Work Selector
+## App 1: Today Work Selector (`apps/today-work-selector/`)
 
-### 現在実装済みの機能
+### 実装済みの機能
+
 1. **状態入力UI**: 時間、気力、場所、使えるエージェント、今日の気分を選択するトグルボタン。
 2. **プロジェクトデータ**: Project Command Centerで整理済みの27個のプロジェクトを内蔵（`src/data/projects.ts`）。
-3. **推薦ロジック**: 状態入力に基づき、優先度やタグを考慮して上位3つのプロジェクトを推薦するスコアリングエンジン。
-4. **プロンプト生成**: 選択されたプロジェクトと状態を組み合わせて、各AI向けのプロンプトを自動生成。
-5. **データ保存**: 選択状態と生成されたプロンプトをlocalStorageに保存・復元する機能。
+3. **推薦ロジック**: 状態入力に基づき、優先度やタグを考慮して上位3つのプロジェクトを推薦するスコアリングエンジン（`src/logic/recommend.ts`）。
+4. **プロンプト生成**: 選択されたプロジェクトと状態を組み合わせて、ChatGPT/Codex/Claude Code/Manus向けプロンプトを自動生成（`src/logic/generatePrompts.ts`）。
+5. **コピー機能**: 生成されたプロンプトをクリップボードにコピーするボタン（フォールバック実装済み）。
+6. **データ保存**: 選択状態と生成されたプロンプトをlocalStorageに保存・復元する機能（`src/logic/storage.ts`）。
 
-### 今後の課題
+### 未実装の機能（今後の課題）
+
 - プロジェクトデータの外部JSON/Notionからの動的インポート
-- PWA（Progressive Web App）としてのインストール対応
+- カスタムプロンプトテンプレートの編集・保存機能
+- ふりかえり結果のMarkdownダウンロード機能
 
 ---
 
-## 2. School Safety Checker
+## App 2: school-safety-checker (`apps/school-safety-checker/`)
 
-### アプリの目的と設計思想
-児童所在不明・校内安全確認などの初動時に、経過時間や確認エリアを整理し、抜け漏れを減らすための**初動確認補助ツール**です。
-**※正式な危機管理マニュアルの代替ではありません。**
-
-**【重要なプライバシー設計】**
-- **個人情報を保存しない**: 児童の氏名・写真・住所などは入力させないUI設計。
-- **localStorageデフォルトOFF**: ブラウザへの保存は初期状態で無効化。ONにした場合でも役割の「担当者名」は保存対象外。
-
-### 現在実装済みの機能
-1. **事案開始・タイマー**: 発生時刻・気づいた時刻の記録と、対応開始からの経過時間表示。
-2. **初動チェックリスト**: 共有、捜索割り振り、連絡要否などのアクション項目。
-3. **捜索エリア管理**: 各エリアの状況（未確認・確認中・確認済み）をワンタップで切り替え。
-4. **役割カード**: 全体指揮、記録係、校内捜索などの担当者メモ（保存なし）。
-5. **出力機能**: 対応ログ（Markdown）、振り返りメモ、ChatGPT用事後整理プロンプトの自動生成とコピー機能。
-
-### 今後の課題
-- 各学校・自治体の正式ルールに合わせたチェックリスト項目のカスタマイズ機能
-- PWA（Progressive Web App）としてのインストール対応
+現在は設計段階です。詳細は `docs/school-safety-checker-design.md` を参照してください。
 
 ---
 
-## 次にやるべきこと（全体）
+## App 3: MaruFlow MVP Mock (`apps/maruflow-mock/`)
 
-1. **デプロイの実行**: GitHub PagesまたはNetlifyへのデプロイ設定を行い、各アプリをオンラインで利用可能にする。
-2. **運用テスト**: 実際のモバイル端末（スマートフォン・タブレット）でUIの操作性を確認する。
+紙テスト採点支援アプリ **MaruFlow** の MVP を、実装前に画面モックとして具体化したものです。
+
+### 技術スタック
+
+- React 19 + Vite 8 + TypeScript 6
+- カスタムCSS（`src/index.css`）のみ。外部UIライブラリ不使用。
+- 外部API・秘密情報不要。完全な静的Webアプリ。
+
+### 画面構成
+
+| 画面 | コンポーネント | 説明 |
+|------|--------------|------|
+| ホーム | `screens/HomeScreen.tsx` | ワークフロー全体像とMVP範囲の説明 |
+| PDF登録 | `screens/PdfRegisterScreen.tsx` | 空白問題PDFのアップロードとテスト情報入力 |
+| 採点欄設定 | `screens/ScoringSetupScreen.tsx` | PDF上の問題ゾーン（座標・配点）の定義 |
+| 採点 | `screens/ScoringScreen.tsx` | 答案への丸・バツ・点数・コメントの付与 |
+| 出力確認 | `screens/OutputScreen.tsx` | 採点結果サマリーと採点済みPDFのダウンロード |
+
+### 主要ファイル
+
+| ファイル | 役割 |
+|----------|------|
+| `src/types.ts` | 型定義（Screen, Question, ScoreEntry, AnswerSheet 等） |
+| `src/data/dummyData.ts` | 架空テスト・架空答案のダミーデータ |
+| `src/index.css` | 全画面共通のデザインシステム（CSS変数・コンポーネントクラス） |
+
+### 実行方法
+
+```bash
+cd apps/maruflow-mock
+pnpm install   # 初回のみ
+pnpm dev       # 開発サーバー起動 → http://localhost:5173
+pnpm build     # 本番ビルド → dist/
+pnpm preview   # ビルド結果のプレビュー
+```
+
+### MVP 対象・非対象
+
+| 区分 | 機能 |
+|------|------|
+| **MVP（実装済み）** | 手動採点（丸・バツ・三角・点数・コメント）、採点欄定義、結果サマリー、PDF出力（モック） |
+| **次フェーズ** | AI採点、OCR、クラス管理、成績分析ダッシュボード |
+
+### 注意事項
+
+- 実際のPDF処理（読み込み・生成）は未実装です。架空のダミーデータで画面の見た目を構築しています。
+- 個人情報・実児童データは一切含まれていません。
 
 ---
 
-## Manus終了後にCodex / Claude Code / ChatGPTで引き継ぐ方法
+## 全アプリ共通: Codex / Claude Code / ChatGPT で引き継ぐ方法
 
-### Codexで引き継ぐ場合
-Codexはコードの変更やコマンド実行に優れています。機能追加やバグ修正を行う際は、以下のプロンプトを使用してください。
+### Codex で引き継ぐ場合
 
 ```markdown
-# アプリ開発引き継ぎ
+# ryon-project-command-tools 開発引き継ぎ
 
 ## 概要
-このプロジェクトはReact + Vite + TypeScriptで構築された静的Webアプリです。
-対象ディレクトリ: `apps/school-safety-checker/` （または `apps/today-work-selector/`）
+このリポジトリは React + Vite + TypeScript で構築された静的Webアプリ群です。
+
+## 対象アプリ
+apps/maruflow-mock/ — 採点支援アプリ MaruFlow の MVP モック
 
 ## 依頼内容
 （ここに追加したい機能や修正したいバグを記載してください）
 
 ## 制約事項
 - 外部APIや秘密情報は使用しない
-- 個人情報を保存するような機能は追加しない（school-safety-checkerの場合）
+- 個人情報・実児童データを扱わない
 - 変更後は必ず `pnpm build` でTypeScriptエラーがないか確認する
 ```
 
-### Claude Codeで引き継ぐ場合
-Claude Codeは構造の理解や大規模なリファクタリング、ドキュメントの更新に適しています。
+### Claude Code で引き継ぐ場合
 
 ```markdown
-# アーキテクチャ引き継ぎ
+# MaruFlow MVP Mock アーキテクチャ引き継ぎ
 
 ## 概要
-React + Viteの静的Webアプリです。対象は `apps/school-safety-checker/` です。
-データは `src/data/initialData.ts` に定義されており、状態管理は `src/App.tsx` に集約されています。
+React + Vite の静的Webアプリです。
+- 型定義: `src/types.ts`
+- ダミーデータ: `src/data/dummyData.ts`
+- 画面コンポーネント: `src/screens/`
+- グローバルCSS: `src/index.css`
 
 ## 依頼内容
-（例：チェックリストの項目を外部JSONから読み込むようにリファクタリングしたい、など）
-
-## 参照ファイル
-- `src/types.ts`
-- `src/App.tsx`
-- `src/logic/generateOutput.ts`
+（例：採点画面にキーボードショートカット（○=1キー、×=2キー）を追加したい）
 ```
 
-### ChatGPTで引き継ぐ場合
-ChatGPTはアイデア出しやUI/UXの改善案、プロンプト生成ロジックの調整に適しています。
+### ChatGPT で引き継ぐ場合
 
 ```markdown
-# プロンプト・出力ロジックの改善
+# MaruFlow MVP Mock UI改善
 
 ## 概要
-`school-safety-checker` の出力ロジックは `src/logic/generateOutput.ts` にあります。
+紙テスト採点支援アプリのUIモックです。
+採点画面（`src/screens/ScoringScreen.tsx`）のUIを改善したいです。
 
 ## 依頼内容
-現在のMarkdown出力フォーマットを以下のように改善したいです。具体的なコードの修正案を提示してください。
-（例：対応ログに、各エリアの最終更新時刻も出力に含めたい）
+（例：採点画面のモバイル対応を改善し、タブレットでの操作性を向上させたい）
+```
+
+---
+
+## デプロイ方法（各アプリ共通）
+
+```bash
+# ビルド
+cd apps/<app-name>
+pnpm build
+
+# dist/ ディレクトリを GitHub Pages / Netlify にデプロイ
+# Netlify の場合:
+#   Base directory: apps/<app-name>
+#   Build command:  pnpm build
+#   Publish directory: dist
 ```
