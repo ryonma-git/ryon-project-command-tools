@@ -1,81 +1,87 @@
-# Manus 終了後の引き継ぎ資料（HANDOFF.md）
+# Handoff
 
-このドキュメントは、Manusの利用期限終了後に、他のAIエージェント（Codex / Claude Code / Cursor / ChatGPT）で `ryon-project-command-tools` の開発を継続するための引き継ぎ資料です。
+このファイルは、Manus AIから次の開発者（人間、Codex、Claude Code、ChatGPTなど）へ作業を引き継ぐための最重要ドキュメントです。
+作業を再開する際は、必ず最初にこのファイルを確認してください。
 
-## 1. 全体アーキテクチャ
+## 現在の完成度
 
-このリポジトリは、5つの独立した静的Webアプリ（React + Vite + TypeScript）を管理するモノレポ構成です。ルートの `index.html` が各アプリへのナビゲーションポータルとして機能します。
+- **Today Work Selector**：100% / 完成（静的プロトタイプとして要件を全て満たす）
+- **School Safety Checker**：100% / 完成（印刷・JSON出力対応、機能要件完了）
+- **MaruFlow MVP Mock**：100% / 完成（7画面構成、UIモックとして完成）
+- **School Ops Portal**：100% / 完成（検索・カテゴリ・プロンプト生成完了）
+- **Manazashi Archive Demo**：100% / 完成（3スタイル物語生成・タイムライン完了）
 
-- `apps/today-work-selector/`: 今日の作業推薦・プロンプト生成アプリ
-- `apps/school-safety-checker/`: 学校安全初動チェックアプリ
-- `apps/maruflow-mock/`: MaruFlow MVP 画面モック
-- `apps/school-ops-portal/`: School Ops Portal
-- `apps/manazashi-archive-demo/`: Manazashi Archive Demo
+全体として、**「Phase 1: 静的プロトタイプ作成」および「Phase 2: 5アプリのUI完成」は完全に終了**しています。
 
-### 技術スタック
-- フロントエンド: React 18
-- 言語: TypeScript
-- スタイリング: プレーンCSS（各アプリの `index.css` に集約）
-- ビルドツール: Vite
-- パッケージマネージャー: pnpm
+## 現在実装済みのもの
 
-### 制約事項
-- **APIキー・秘密情報の排除**: すべてのアプリは外部API（ChatGPT等）に依存せず、フロントエンドのみで完結しています。
-- **データ永続化**: バックエンドを持たず、ブラウザの `localStorage` のみを使用しています。
+- 5つの独立したVite（React+TS）アプリ
+- ルートの `index.html`（5アプリへの共通ナビゲーション）
+- 各アプリのPWA対応（`manifest.json`、テーマカラー）
+- 各アプリのビルド設定（TypeScriptエラーなし、本番ビルド成功）
+- `docs/` 配下の各アプリ設計書
+- GitHub Actions の `deploy-pages.yml`（ただし `today-work-selector` のみのデプロイ設定で止まっている）
 
-## 2. アプリ別引き継ぎ事項
+## 未実装・未完成のもの
 
-### 2.1 Today Work Selector
-- **状態**: 実装完了
-- **主要ファイル**:
-  - `src/data/projects.ts`: 27のプロジェクトデータが定義されています。
-  - `src/logic/recommend.ts`: 推薦ロジック。
-- **今後の拡張案**:
-  - 新規プロジェクト追加
-  - プロンプトテンプレートの改善
+- **GitHub Pages への全5アプリのデプロイ**（現状のActions設定ではルートのindex.htmlと全アプリの同時デプロイが未完了）
+- アプリ間のデータ連携（現在はそれぞれ独立した静的データを持っている）
+- 実際のバックエンド・データベース（Supabase/Firebase等）との接続
+- 実際のLLM API（OpenAI等）との直接接続（現在はプロンプトをコピーするだけ）
 
-### 2.2 School Safety Checker
-- **状態**: 実装完了
-- **主要ファイル**:
-  - `src/App.tsx`: メインUI。状態管理（事案、チェックリスト、エリア、役割）を統合。
-- **今後の拡張案**:
-  - チェックリストのカスタマイズ機能（学校ごとのルール対応）
-  - PWAとしてのオフライン機能の強化
+## 既知の問題
 
-### 2.3 MaruFlow MVP Mock
-- **状態**: 7画面モック実装完了
-- **主要ファイル**:
-  - `src/App.tsx`: 7画面のルーティング。
-- **今後の拡張案**:
-  - 実データ・AI採点APIとの連携（別アプリとして切り出すことを推奨）
+- GitHub Actions の `deploy-pages.yml` が5アプリ全体をビルド・デプロイする設定になっていない（権限エラーのため更新を保留した）。
+- `dist` ディレクトリの扱い：ローカルビルドでは各アプリの `dist` に出力されるが、ルートの `index.html` からリンクをたどるには、デプロイ時にファイルを一つにまとめるビルドスクリプトが必要。
 
-### 2.4 School Ops Portal
-- **状態**: 実装完了
-- **主要ファイル**:
-  - `src/data/articles.ts`: サンプル記事データ。
-- **今後の拡張案**:
-  - Markdownエディタによる記事作成・編集機能の追加
+## 次にCodexへ渡すべき作業
 
-### 2.5 Manazashi Archive Demo
-- **状態**: デモ実装完了
-- **主要ファイル**:
-  - `src/data/children.ts`: 架空の児童・記録データ。
-- **今後の拡張案**:
-  - 実際の記録アプリとしての入力UI実装
+1. **デプロイ設定の修正**：
+   「ルートディレクトリに `build.sh` を作成し、全5アプリをビルドして一つの `dist` フォルダにまとめ、ルートの `index.html` もそこにコピーするスクリプトを書いてください。その後、`deploy-pages.yml` を修正してその `dist` を GitHub Pages にデプロイするようにしてください。」
 
-## 3. 各エージェントでの継続開発方法
+## 次にClaude Codeへ渡すべき作業
 
-### Cursor / Codex を使う場合
-ローカルファイルシステムに直接アクセスできるため、コードの修正・ビルド確認に最適です。
-1. `ryon-project-command-tools` リポジトリをCursorで開く
-2. `apps/today-work-selector/src/data/projects.ts` などの修正を依頼する
-3. ターミナルで `cd apps/today-work-selector && pnpm build` を実行してエラーがないか確認する
+1. **Notion API 連携の設計**：
+   「`docs/future-integration.md` を読み、Today Work Selector や School Ops Portal のデータを Notion データベースから取得するアーキテクチャを設計し、`docs/notion-integration.md` を作成してください。」
 
-### Claude Code を使う場合
-複雑なロジックの修正や設計の相談に向いています。
-1. ターミナルで `ryon-project-command-tools` ディレクトリに移動
-2. `claude` コマンドを起動し、依頼を行う
+## 次にChatGPTへ相談すべきこと
 
-## 4. デプロイに関する注意
-GitHub Pages へのデプロイは `.github/workflows/deploy-pages.yml` によって自動化されています。
-`main` ブランチにプッシュすると、5つのアプリすべてがビルドされ、ルートの `index.html` とともにデプロイされます。
+- **PMレビュー**：現在の5アプリのUI/UXについて、学校現場の視点から改善点がないかレビューしてもらう。
+- **仕様判断**：School Safety Checker のログを学校の正式な記録として扱うために必要な、自治体ごとのフォーマット対応方針を相談する。
+
+## 触ってはいけないこと
+
+- **実児童データを入れない**（すべて架空データで運用すること）
+- **個人情報を入れない**（氏名、住所、連絡先など）
+- **APIキーを入れない**（`.env` に記述し、コミットしないこと）
+- **`.env` をコミットしない**（`.gitignore` に記載済み）
+- **School Safety Checkerで通報判断を自動化しない**（最終判断は必ず人間が行うUIを維持する）
+- **まなざしアーカイブを所見自動生成や成績管理として扱わない**（あくまで「物語」の整理ツールであること）
+
+## 再開手順
+
+次のエージェント（または人間）が作業を再開する際の手順です。
+
+1. `README.md` を読む
+2. `HANDOFF.md`（このファイル）を読む
+3. ルートディレクトリで `npm install` は不要（各アプリ内で実行する）
+4. 各アプリのディレクトリ（例：`cd apps/today-work-selector`）に移動
+5. `npm install`
+6. `npm run dev` でローカルサーバー起動
+7. `npm run build` でビルド確認
+8. `docs/` フォルダ内の関連仕様書を確認
+9. 未完了タスク（デプロイ設定など）を確認して作業開始
+
+## 重要ファイル一覧
+
+- `index.html`：5アプリへの共通ポータル（ナビゲーション）
+- `HANDOFF.md`：引き継ぎ資料（このファイル）
+- `ROADMAP.md`：今後の開発フェーズ
+- `apps/*/src/App.tsx`：各アプリのメインUI実装
+- `apps/*/src/data/*.ts`：各アプリの静的（架空）データ
+- `docs/*.md`：各アプリの設計書・仕様書
+
+## 直近のコミット
+
+最後の作業完了時点のコミットハッシュ：
+`fa6165f` (Enhance safety checker and manazashi archive demo)
