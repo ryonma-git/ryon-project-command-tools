@@ -1,11 +1,12 @@
 // ============================================================
-// projects.ts — プロジェクト初期データ
+// projects.ts — プロジェクト初期データ（27プロジェクト）
 // Project Command Center で整理済みの内容に基づく
+// 実個人データ・実児童データは一切含まない（架空・ダミーデータのみ）
 // ============================================================
-
 import type { Project } from '../types';
 
 export const PROJECTS: Project[] = [
+  // ---- 記録 ----
   {
     id: 'personal-memory',
     name: 'personal-memory',
@@ -14,11 +15,20 @@ export const PROJECTS: Project[] = [
     priority: 'high',
     energy: '低',
     nextAction: '今日の作業ログをMarkdownで記録し、GitHubにpush',
+    recommendedContexts: ['ChatGPTのみ', 'Codexあり'],
     recommendedContext: ['ChatGPTのみ', 'Codexあり'],
+    outputTypes: ['Markdown', 'GitHub'],
     outputType: ['Markdown', 'GitHub'],
     notes: '毎日の作業・思考の記録。Codexで自動化可能。',
     preferredLocation: ['自宅'],
+    risk: 'low',
+    suitableFor: '気力が低い日・短時間・どこでも',
+    prompts: {
+      chatgpt: '今日の作業ログをMarkdownで整理してください。プロジェクト名・やったこと・気づき・次のアクションの形式で。',
+      codex: 'personal-memory リポジトリに今日の作業ログを追記するMarkdownファイルを作成してください。',
+    },
   },
+  // ---- 校務 ----
   {
     id: 'koumuops',
     name: '校務ops',
@@ -27,11 +37,19 @@ export const PROJECTS: Project[] = [
     priority: 'high',
     energy: '中',
     nextAction: '校務フローの整理・自動化案をNotionにまとめる',
+    recommendedContexts: ['ChatGPTのみ', 'Claude Codeあり'],
     recommendedContext: ['ChatGPTのみ', 'Claude Codeあり'],
+    outputTypes: ['Notion', 'Markdown'],
     outputType: ['Notion', 'Markdown'],
     notes: '校務の効率化・AI化を推進するプロジェクト。',
     preferredLocation: ['学校'],
+    risk: 'low',
+    suitableFor: '学校にいる日・中程度の気力',
+    prompts: {
+      chatgpt: '小学校の校務フローをAIで効率化するアイデアを整理してください。具体的な業務名と改善案を箇条書きで。',
+    },
   },
+  // ---- 開発 ----
   {
     id: 'maruflow',
     name: 'MaruFlow / まる付けアプリ',
@@ -40,11 +58,20 @@ export const PROJECTS: Project[] = [
     priority: 'high',
     energy: '高',
     nextAction: 'まる付け機能のUI設計とコンポーネント実装',
+    recommendedContexts: ['Manusあり', 'Claude Codeあり'],
     recommendedContext: ['Manusあり', 'Claude Codeあり'],
+    outputTypes: ['コード', 'GitHub'],
     outputType: ['コード', 'GitHub'],
     notes: 'Webアプリ。採点・フィードバック自動化。',
     preferredLocation: ['自宅'],
+    risk: 'medium',
+    suitableFor: '気力が高い日・2時間以上・自宅',
+    prompts: {
+      manus: 'MaruFlow（紙テスト採点支援アプリ）のUI実装を進めてください。React + TypeScript + Tailwind CSS で、外部API不要の静的Webアプリとして。',
+      claudeCode: 'MaruFlow の採点画面コンポーネントを実装してください。架空の答案データを使ったデモ動作を確認できる形で。',
+    },
   },
+  // ---- 記録 ----
   {
     id: 'manazashi',
     name: 'まなざしアーカイブ',
@@ -53,24 +80,40 @@ export const PROJECTS: Project[] = [
     priority: 'medium',
     energy: '低',
     nextAction: '写真・エピソードのMarkdown整理とアーカイブ構造設計',
+    recommendedContexts: ['ChatGPTのみ', 'Codexあり'],
     recommendedContext: ['ChatGPTのみ', 'Codexあり'],
+    outputTypes: ['Markdown', 'GitHub'],
     outputType: ['Markdown', 'GitHub'],
     notes: '子どもや授業の記録アーカイブ。',
     preferredLocation: ['自宅'],
+    risk: 'low',
+    suitableFor: '気力が低い日・記録したい気分',
+    prompts: {
+      chatgpt: 'まなざしアーカイブのMarkdown構造を設計してください。日付・場面・エピソード・気づきを記録できる形式で。',
+    },
   },
+  // ---- 開発 ----
   {
     id: 'school-safety',
     name: '学校安全管理アプリ',
     area: '開発',
-    status: 'pending',
+    status: 'active',
     priority: 'high',
     energy: '高',
-    nextAction: '要件定義と画面設計のMarkdown作成',
+    nextAction: 'school-safety-checker アプリの機能確認・改善',
+    recommendedContexts: ['Manusあり', 'Claude Codeあり'],
     recommendedContext: ['Manusあり', 'Claude Codeあり'],
+    outputTypes: ['コード', 'GitHub', 'Markdown'],
     outputType: ['コード', 'GitHub', 'Markdown'],
     notes: '学校施設の安全点検・記録管理Webアプリ。',
     preferredLocation: ['学校', '自宅'],
+    risk: 'medium',
+    suitableFor: '気力が高い日・実装したい気分',
+    prompts: {
+      manus: 'school-safety-checker アプリの機能を拡充してください。個人情報を入力させない設計を維持しつつ、初動チェックリストと捜索エリア管理を改善してください。',
+    },
   },
+  // ---- 校務 ----
   {
     id: 'tablet-kanri',
     name: 'タブレット管理台帳',
@@ -78,12 +121,20 @@ export const PROJECTS: Project[] = [
     status: 'active',
     priority: 'high',
     energy: '中',
-    nextAction: 'Excel台帳の最新版ビルドスクリプト実行と動作確認',
+    nextAction: 'タブレット管理台帳Excelの最新版を更新・配布',
+    recommendedContexts: ['Codexあり', 'ChatGPTのみ'],
     recommendedContext: ['Codexあり', 'ChatGPTのみ'],
+    outputTypes: ['Excel', 'GitHub'],
     outputType: ['Excel', 'GitHub'],
-    notes: 'openpyxlでExcel生成。Manus skillあり。',
-    preferredLocation: ['学校', '自宅'],
+    notes: '学校タブレットの管理台帳Excelファイル。openpyxlで生成。',
+    preferredLocation: ['学校'],
+    risk: 'low',
+    suitableFor: '学校にいる日・校務を片付けたい気分',
+    prompts: {
+      codex: 'タブレット管理台帳のExcelファイルをopenpyxlで更新するPythonスクリプトを実行してください。',
+    },
   },
+  // ---- 校務 ----
   {
     id: 'joho-notion',
     name: '情報部会Notion',
@@ -92,11 +143,19 @@ export const PROJECTS: Project[] = [
     priority: 'medium',
     energy: '低',
     nextAction: 'Notionページの更新・議事録追記',
+    recommendedContexts: ['Claude Codeあり', 'ChatGPTのみ'],
     recommendedContext: ['Claude Codeあり', 'ChatGPTのみ'],
+    outputTypes: ['Notion'],
     outputType: ['Notion'],
     notes: '情報部会の共有・記録スペース。',
     preferredLocation: ['学校'],
+    risk: 'low',
+    suitableFor: '学校にいる日・短時間・気力が低い日',
+    prompts: {
+      chatgpt: '情報部会の議事録をMarkdown形式で整理してください。日時・参加者・議題・決定事項・次回予定の形式で。',
+    },
   },
+  // ---- 校務 ----
   {
     id: 'ai-jirei',
     name: 'AI活用事例台帳',
@@ -105,11 +164,19 @@ export const PROJECTS: Project[] = [
     priority: 'medium',
     energy: '低',
     nextAction: '新しいAI活用事例を台帳に追記',
+    recommendedContexts: ['ChatGPTのみ', 'Claude Codeあり'],
     recommendedContext: ['ChatGPTのみ', 'Claude Codeあり'],
+    outputTypes: ['Notion', 'Markdown'],
     outputType: ['Notion', 'Markdown'],
     notes: '学校でのAI活用事例を蓄積・共有。',
     preferredLocation: ['学校'],
+    risk: 'low',
+    suitableFor: '短時間・気力が低い日・記録したい気分',
+    prompts: {
+      chatgpt: '学校でのAI活用事例を整理してください。業務名・活用ツール・効果・課題の形式で。',
+    },
   },
+  // ---- キャリア ----
   {
     id: 'ai-kenshu',
     name: '生成AI研修講師',
@@ -118,11 +185,20 @@ export const PROJECTS: Project[] = [
     priority: 'high',
     energy: '高',
     nextAction: '研修スライドの構成案をChatGPTで生成',
+    recommendedContexts: ['ChatGPTのみ', 'Manusあり'],
     recommendedContext: ['ChatGPTのみ', 'Manusあり'],
+    outputTypes: ['PDF', 'Markdown', 'アイデア'],
     outputType: ['PDF', 'Markdown', 'アイデア'],
     notes: '外部研修講師としての活動。スライド・資料作成。',
     preferredLocation: ['自宅', '外'],
+    risk: 'medium',
+    suitableFor: 'キャリアを進めたい気分・気力が高い日',
+    prompts: {
+      chatgpt: '生成AI研修のスライド構成案を作成してください。対象者・目標・内容・演習の形式で。',
+      manus: '生成AI研修用のスライドデッキを作成してください。教員向けに分かりやすい構成で。',
+    },
   },
+  // ---- 授業 ----
   {
     id: 'toio-rika',
     name: 'toio理科授業',
@@ -131,11 +207,19 @@ export const PROJECTS: Project[] = [
     priority: 'medium',
     energy: '高',
     nextAction: 'toioを使った理科授業の学習活動設計',
+    recommendedContexts: ['ChatGPTのみ'],
     recommendedContext: ['ChatGPTのみ'],
+    outputTypes: ['アイデア', 'Markdown'],
     outputType: ['アイデア', 'Markdown'],
     notes: 'toioロボットを活用した理科授業設計。',
     preferredLocation: ['学校'],
+    risk: 'low',
+    suitableFor: '授業を考えたい気分・学校にいる日',
+    prompts: {
+      chatgpt: 'toioロボットを使った小学校理科の授業活動を設計してください。学習目標・活動内容・評価の形式で。',
+    },
   },
+  // ---- 授業 ----
   {
     id: 'eigo-redesign',
     name: '英語授業再設計',
@@ -144,11 +228,19 @@ export const PROJECTS: Project[] = [
     priority: 'medium',
     energy: '中',
     nextAction: '英語授業の単元計画をJSONで構造化',
+    recommendedContexts: ['ChatGPTのみ', 'Codexあり'],
     recommendedContext: ['ChatGPTのみ', 'Codexあり'],
+    outputTypes: ['JSON', 'Markdown'],
     outputType: ['JSON', 'Markdown'],
     notes: '英語授業のAI活用・再設計プロジェクト。',
     preferredLocation: ['学校', '自宅'],
+    risk: 'low',
+    suitableFor: '授業を考えたい気分・中程度の気力',
+    prompts: {
+      chatgpt: '小学校英語の単元計画をJSON形式で構造化してください。単元名・目標・活動・評価を含む形式で。',
+    },
   },
+  // ---- 開発 ----
   {
     id: 'timetable',
     name: '時間割管理アプリ',
@@ -157,11 +249,19 @@ export const PROJECTS: Project[] = [
     priority: 'high',
     energy: '高',
     nextAction: '時間割アプリの新機能実装またはバグ修正',
+    recommendedContexts: ['Manusあり', 'Claude Codeあり'],
     recommendedContext: ['Manusあり', 'Claude Codeあり'],
+    outputTypes: ['コード', 'GitHub'],
     outputType: ['コード', 'GitHub'],
-    notes: 'React+TypeScript製。Manus skillあり。',
+    notes: 'React+TypeScript製。体育教師向け週間時間割管理Webアプリ。',
     preferredLocation: ['自宅'],
+    risk: 'low',
+    suitableFor: '気力が高い日・実装したい気分・2時間以上',
+    prompts: {
+      manus: '時間割管理アプリ（timetable-web）の機能を改善してください。React + TypeScript + Tailwind CSS 構成を維持してください。',
+    },
   },
+  // ---- 授業 ----
   {
     id: 'taiwan-qr',
     name: '台湾交流QRラリー',
@@ -170,11 +270,19 @@ export const PROJECTS: Project[] = [
     priority: 'medium',
     energy: '中',
     nextAction: 'QRラリーのコンテンツ設計と技術仕様書作成',
+    recommendedContexts: ['ChatGPTのみ', 'Manusあり'],
     recommendedContext: ['ChatGPTのみ', 'Manusあり'],
+    outputTypes: ['Markdown', 'コード'],
     outputType: ['Markdown', 'コード'],
     notes: '台湾交流イベント向けQRコードラリーシステム。',
     preferredLocation: ['学校', '自宅'],
+    risk: 'low',
+    suitableFor: '授業を考えたい気分・中程度の気力',
+    prompts: {
+      chatgpt: '台湾交流イベント向けQRコードラリーのコンテンツを設計してください。問題・ヒント・ゴール設定を含む形式で。',
+    },
   },
+  // ---- キャリア ----
   {
     id: 'portfolio',
     name: 'ポートフォリオサイト',
@@ -183,11 +291,19 @@ export const PROJECTS: Project[] = [
     priority: 'high',
     energy: '中',
     nextAction: 'ポートフォリオサイトのコンテンツ更新・デプロイ',
+    recommendedContexts: ['Manusあり', 'Claude Codeあり'],
     recommendedContext: ['Manusあり', 'Claude Codeあり'],
+    outputTypes: ['コード', 'GitHub'],
     outputType: ['コード', 'GitHub'],
     notes: '個人ポートフォリオサイト。GitHub Pages運用。',
     preferredLocation: ['自宅'],
+    risk: 'low',
+    suitableFor: 'キャリアを進めたい気分・中程度の気力',
+    prompts: {
+      manus: 'ポートフォリオサイトを更新してください。実績・スキル・プロジェクト一覧を含む形で。',
+    },
   },
+  // ---- キャリア ----
   {
     id: 'career',
     name: '転職・独立案件管理',
@@ -196,11 +312,19 @@ export const PROJECTS: Project[] = [
     priority: 'high',
     energy: '中',
     nextAction: '案件リストの整理・次のアクション確認',
+    recommendedContexts: ['ChatGPTのみ'],
     recommendedContext: ['ChatGPTのみ'],
+    outputTypes: ['Notion', 'アイデア'],
     outputType: ['Notion', 'アイデア'],
     notes: '転職・独立に向けた案件・コネクション管理。',
     preferredLocation: ['自宅', '外'],
+    risk: 'medium',
+    suitableFor: 'キャリアを進めたい気分・どこでも',
+    prompts: {
+      chatgpt: '転職・独立に向けた案件リストと次のアクションを整理してください。案件名・状況・次のステップの形式で。',
+    },
   },
+  // ---- インフラ ----
   {
     id: 'mac-dev',
     name: 'Mac購入・開発環境',
@@ -209,11 +333,19 @@ export const PROJECTS: Project[] = [
     priority: 'medium',
     energy: '低',
     nextAction: 'Mac購入計画と開発環境セットアップ手順書の作成',
+    recommendedContexts: ['ChatGPTのみ', 'Codexあり'],
     recommendedContext: ['ChatGPTのみ', 'Codexあり'],
+    outputTypes: ['Markdown'],
     outputType: ['Markdown'],
     notes: 'Mac購入計画と開発環境構築。',
     preferredLocation: ['自宅'],
+    risk: 'low',
+    suitableFor: '短時間・気力が低い日',
+    prompts: {
+      chatgpt: 'Mac購入後の開発環境構築手順をMarkdownでまとめてください。Node.js・Git・VSCode・pnpm等の設定を含む形で。',
+    },
   },
+  // ---- インフラ ----
   {
     id: 'github-infra',
     name: 'GitHub/デプロイ基盤',
@@ -222,11 +354,19 @@ export const PROJECTS: Project[] = [
     priority: 'high',
     energy: '中',
     nextAction: 'GitHub Actions / Netlify / Pages のデプロイ設定整備',
+    recommendedContexts: ['Codexあり', 'Claude Codeあり'],
     recommendedContext: ['Codexあり', 'Claude Codeあり'],
+    outputTypes: ['GitHub', 'Markdown'],
     outputType: ['GitHub', 'Markdown'],
     notes: 'GitHub組織・リポジトリ・CI/CD基盤の整備。',
     preferredLocation: ['自宅'],
+    risk: 'medium',
+    suitableFor: '実装したい気分・中程度の気力',
+    prompts: {
+      codex: 'GitHub Actions のデプロイワークフローを確認・改善してください。',
+    },
   },
+  // ---- 健康・趣味 ----
   {
     id: 'health',
     name: '健康・運動',
@@ -235,11 +375,19 @@ export const PROJECTS: Project[] = [
     priority: 'medium',
     energy: '低',
     nextAction: '運動記録・体調ログをMarkdownに追記',
+    recommendedContexts: ['ChatGPTのみ'],
     recommendedContext: ['ChatGPTのみ'],
+    outputTypes: ['Markdown'],
     outputType: ['Markdown'],
     notes: '健康管理・運動習慣の記録。',
     preferredLocation: ['自宅', '外'],
+    risk: 'low',
+    suitableFor: '気力が低い日・短時間・どこでも',
+    prompts: {
+      chatgpt: '今日の運動記録と体調をMarkdownで記録してください。種目・時間・体調・気づきの形式で。',
+    },
   },
+  // ---- 健康・趣味 ----
   {
     id: 'scent-music',
     name: '香り・音楽・都市記憶',
@@ -248,11 +396,19 @@ export const PROJECTS: Project[] = [
     priority: 'low',
     energy: '低',
     nextAction: '香り・音楽・都市の記憶をMarkdownで記録',
+    recommendedContexts: ['ChatGPTのみ'],
     recommendedContext: ['ChatGPTのみ'],
+    outputTypes: ['Markdown', 'アイデア'],
     outputType: ['Markdown', 'アイデア'],
     notes: '個人的な感覚・記憶のアーカイブ。',
     preferredLocation: ['自宅', '外'],
+    risk: 'low',
+    suitableFor: '気力が低い日・記録したい気分',
+    prompts: {
+      chatgpt: '今日感じた香り・音楽・都市の記憶をMarkdownで記録してください。感覚・場所・気持ちを含む形で。',
+    },
   },
+  // ---- 健康・趣味 ----
   {
     id: 'bicycle',
     name: '自転車再利用',
@@ -261,11 +417,19 @@ export const PROJECTS: Project[] = [
     priority: 'low',
     energy: '低',
     nextAction: '自転車整備・再利用計画のメモ作成',
+    recommendedContexts: ['ChatGPTのみ'],
     recommendedContext: ['ChatGPTのみ'],
+    outputTypes: ['Markdown'],
     outputType: ['Markdown'],
     notes: '自転車の整備・再利用プロジェクト。',
     preferredLocation: ['自宅'],
+    risk: 'low',
+    suitableFor: '短時間・気力が低い日',
+    prompts: {
+      chatgpt: '自転車の整備・再利用計画をMarkdownでまとめてください。必要な部品・手順・費用目安を含む形で。',
+    },
   },
+  // ---- 校務 ----
   {
     id: 'ai-hearing',
     name: '教員業務AI化ヒアリング',
@@ -274,11 +438,19 @@ export const PROJECTS: Project[] = [
     priority: 'high',
     energy: '中',
     nextAction: 'ヒアリング結果の整理・課題マップ作成',
+    recommendedContexts: ['ChatGPTのみ', 'Claude Codeあり'],
     recommendedContext: ['ChatGPTのみ', 'Claude Codeあり'],
+    outputTypes: ['Notion', 'Markdown'],
     outputType: ['Notion', 'Markdown'],
     notes: '教員の業務AI化に向けたヒアリング・分析。',
     preferredLocation: ['学校'],
+    risk: 'low',
+    suitableFor: '学校にいる日・校務を片付けたい気分',
+    prompts: {
+      chatgpt: '教員業務AI化ヒアリングの結果を整理してください。業務名・課題・AI活用案・優先度の形式で。',
+    },
   },
+  // ---- 校務 ----
   {
     id: 'tantou-ai',
     name: '担任業務AIマスター',
@@ -287,11 +459,19 @@ export const PROJECTS: Project[] = [
     priority: 'high',
     energy: '中',
     nextAction: '担任業務のAI活用パターンをNotionに整理',
+    recommendedContexts: ['ChatGPTのみ', 'Claude Codeあり'],
     recommendedContext: ['ChatGPTのみ', 'Claude Codeあり'],
+    outputTypes: ['Notion', 'Markdown'],
     outputType: ['Notion', 'Markdown'],
     notes: '担任業務のAI化・効率化マスタープラン。',
     preferredLocation: ['学校'],
+    risk: 'low',
+    suitableFor: '学校にいる日・校務を片付けたい気分',
+    prompts: {
+      chatgpt: '担任業務のAI活用パターンを整理してください。業務名・現状・AI活用案・期待効果の形式で。',
+    },
   },
+  // ---- 授業 ----
   {
     id: 'jugyo-json',
     name: '授業計画JSON',
@@ -300,11 +480,19 @@ export const PROJECTS: Project[] = [
     priority: 'medium',
     energy: '中',
     nextAction: '授業計画のJSON構造設計と既存データの変換',
+    recommendedContexts: ['Codexあり', 'ChatGPTのみ'],
     recommendedContext: ['Codexあり', 'ChatGPTのみ'],
+    outputTypes: ['JSON', 'GitHub'],
     outputType: ['JSON', 'GitHub'],
     notes: '授業計画をJSON形式で構造化・管理。',
     preferredLocation: ['学校', '自宅'],
+    risk: 'low',
+    suitableFor: '授業を考えたい気分・中程度の気力',
+    prompts: {
+      codex: '授業計画をJSON形式に変換するスクリプトを作成してください。単元名・目標・活動・評価を含む構造で。',
+    },
   },
+  // ---- 開発 ----
   {
     id: 'school-portal',
     name: '学校向けアプリ公開ポータル',
@@ -313,11 +501,19 @@ export const PROJECTS: Project[] = [
     priority: 'medium',
     energy: '高',
     nextAction: 'ポータルサイトの設計・技術スタック選定',
+    recommendedContexts: ['Manusあり', 'Claude Codeあり'],
     recommendedContext: ['Manusあり', 'Claude Codeあり'],
+    outputTypes: ['コード', 'GitHub'],
     outputType: ['コード', 'GitHub'],
     notes: '学校向けWebアプリを公開するポータルサイト。',
     preferredLocation: ['自宅'],
+    risk: 'medium',
+    suitableFor: '気力が高い日・実装したい気分・2時間以上',
+    prompts: {
+      manus: '学校向けアプリ公開ポータルサイトを設計・実装してください。React + TypeScript + Tailwind CSS で静的Webアプリとして。',
+    },
   },
+  // ---- 授業 ----
   {
     id: 'joho-moral',
     name: '情報モラル教育',
@@ -326,11 +522,19 @@ export const PROJECTS: Project[] = [
     priority: 'medium',
     energy: '中',
     nextAction: '情報モラル教材の改訂・授業計画更新',
+    recommendedContexts: ['ChatGPTのみ'],
     recommendedContext: ['ChatGPTのみ'],
+    outputTypes: ['Markdown', 'アイデア'],
     outputType: ['Markdown', 'アイデア'],
     notes: '情報モラル教育の教材・授業設計。',
     preferredLocation: ['学校'],
+    risk: 'low',
+    suitableFor: '授業を考えたい気分・学校にいる日',
+    prompts: {
+      chatgpt: '小学校の情報モラル教育の授業案を作成してください。学年・テーマ・活動内容・評価の形式で。',
+    },
   },
+  // ---- インフラ ----
   {
     id: 'codex-ops',
     name: 'Codex/Claude Code/Manus運用',
@@ -339,11 +543,19 @@ export const PROJECTS: Project[] = [
     priority: 'high',
     energy: '中',
     nextAction: '各エージェントの運用ルール・プロンプト集の整備',
+    recommendedContexts: ['Codexあり', 'Claude Codeあり', 'Manusあり'],
     recommendedContext: ['Codexあり', 'Claude Codeあり', 'Manusあり'],
+    outputTypes: ['Markdown', 'GitHub'],
     outputType: ['Markdown', 'GitHub'],
     notes: 'AI開発エージェントの運用・プロンプト管理。',
     preferredLocation: ['自宅'],
+    risk: 'low',
+    suitableFor: '実装したい気分・中程度の気力',
+    prompts: {
+      chatgpt: 'Codex・Claude Code・Manusの使い分けルールとプロンプトテンプレートを整理してください。',
+    },
   },
+  // ---- キャリア ----
   {
     id: 'eigo-jiko',
     name: '英語思想自己紹介',
@@ -352,9 +564,16 @@ export const PROJECTS: Project[] = [
     priority: 'medium',
     energy: '低',
     nextAction: '英語での自己紹介・思想表現の草稿作成',
+    recommendedContexts: ['ChatGPTのみ'],
     recommendedContext: ['ChatGPTのみ'],
+    outputTypes: ['Markdown', 'アイデア'],
     outputType: ['Markdown', 'アイデア'],
     notes: '英語での自己表現・キャリア向け自己紹介。',
     preferredLocation: ['自宅', '外'],
+    risk: 'low',
+    suitableFor: '気力が低い日・キャリアを進めたい気分',
+    prompts: {
+      chatgpt: '英語での自己紹介・教育ビジョンの表現を草稿してください。教師としての経験・AI活用・子どもへの思いを含む形で。',
+    },
   },
 ];

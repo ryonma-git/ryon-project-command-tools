@@ -1,167 +1,77 @@
-# ryon-project-command-tools — Handoff Document
+# Manus 終了後の引き継ぎ資料（HANDOFF.md）
 
-このドキュメントは、Manusによって作成・管理されている `ryon-project-command-tools` リポジトリ全体の引き継ぎ資料です。
-Manusの利用期限終了後、他のAIエージェント（Codex / Claude Code / ChatGPT）で開発を継続するための情報をまとめています。
+このドキュメントは、Manusの利用期限終了後に、他のAIエージェント（Codex / Claude Code / ChatGPT）で `ryon-project-command-tools` の開発を継続するための引き継ぎ資料です。
 
----
+## 1. 全体アーキテクチャ
 
-## リポジトリ構成
+このリポジトリは、複数の独立した静的Webアプリ（React + Vite + TypeScript）を管理するモノレポ構成です。
+現在、以下の3つのアプリが含まれています。
 
-```
-ryon-project-command-tools/
-├── apps/
-│   ├── today-work-selector/   # App 1: 今日の作業選択 & プロンプト生成
-│   ├── school-safety-checker/ # App 2: 学校安全点検（設計中）
-│   └── maruflow-mock/         # App 3: 採点支援アプリ MaruFlow MVP モック
-├── docs/
-│   ├── school-safety-checker-design.md
-│   └── maruflow-mvp.md        # MaruFlow MVP 仕様書
-├── README.md
-└── HANDOFF.md                 # このファイル
-```
-
----
-
-## App 1: Today Work Selector (`apps/today-work-selector/`)
-
-### 実装済みの機能
-
-1. **状態入力UI**: 時間、気力、場所、使えるエージェント、今日の気分を選択するトグルボタン。
-2. **プロジェクトデータ**: Project Command Centerで整理済みの27個のプロジェクトを内蔵（`src/data/projects.ts`）。
-3. **推薦ロジック**: 状態入力に基づき、優先度やタグを考慮して上位3つのプロジェクトを推薦するスコアリングエンジン（`src/logic/recommend.ts`）。
-4. **プロンプト生成**: 選択されたプロジェクトと状態を組み合わせて、ChatGPT/Codex/Claude Code/Manus向けプロンプトを自動生成（`src/logic/generatePrompts.ts`）。
-5. **コピー機能**: 生成されたプロンプトをクリップボードにコピーするボタン（フォールバック実装済み）。
-6. **データ保存**: 選択状態と生成されたプロンプトをlocalStorageに保存・復元する機能（`src/logic/storage.ts`）。
-
-### 未実装の機能（今後の課題）
-
-- プロジェクトデータの外部JSON/Notionからの動的インポート
-- カスタムプロンプトテンプレートの編集・保存機能
-- ふりかえり結果のMarkdownダウンロード機能
-
----
-
-## App 2: school-safety-checker (`apps/school-safety-checker/`)
-
-現在は設計段階です。詳細は `docs/school-safety-checker-design.md` を参照してください。
-
----
-
-## App 3: MaruFlow MVP Mock (`apps/maruflow-mock/`)
-
-紙テスト採点支援アプリ **MaruFlow** の MVP を、実装前に画面モックとして具体化したものです。
+- `apps/today-work-selector/`: 今日の作業推薦・プロンプト生成アプリ
+- `apps/school-safety-checker/`: 学校安全初動チェックアプリ
+- `apps/maruflow-mock/`: MaruFlow MVP 画面モック
 
 ### 技術スタック
+- フロントエンド: React 18
+- 言語: TypeScript
+- スタイリング: プレーンCSS（各アプリの `index.css` に集約）
+- ビルドツール: Vite
+- パッケージマネージャー: pnpm
 
-- React 19 + Vite 8 + TypeScript 6
-- カスタムCSS（`src/index.css`）のみ。外部UIライブラリ不使用。
-- 外部API・秘密情報不要。完全な静的Webアプリ。
+### 制約事項
+- **APIキー・秘密情報の排除**: すべてのアプリは外部API（ChatGPT等）に依存せず、フロントエンドのみで完結しています。
+- **manus.space 非依存**: 特定のホスティング環境に依存しない静的ファイルとしてビルドされます。
 
-### 画面構成
+## 2. アプリ別引き継ぎ事項
 
-| 画面 | コンポーネント | 説明 |
-|------|--------------|------|
-| ホーム | `screens/HomeScreen.tsx` | ワークフロー全体像とMVP範囲の説明 |
-| PDF登録 | `screens/PdfRegisterScreen.tsx` | 空白問題PDFのアップロードとテスト情報入力 |
-| 採点欄設定 | `screens/ScoringSetupScreen.tsx` | PDF上の問題ゾーン（座標・配点）の定義 |
-| 採点 | `screens/ScoringScreen.tsx` | 答案への丸・バツ・点数・コメントの付与 |
-| 出力確認 | `screens/OutputScreen.tsx` | 採点結果サマリーと採点済みPDFのダウンロード |
+### 2.1 Today Work Selector
+- **状態**: 実装完了
+- **主要ファイル**:
+  - `src/data/projects.ts`: 27のプロジェクトデータが定義されています。プロジェクトの追加・変更はここで行います。
+  - `src/logic/recommend.ts`: プロジェクトの推薦ロジック。時間・気力・場所などの条件に基づきスコアリングします。
+  - `src/logic/generatePrompts.ts`: 各エージェント向けのプロンプト生成ロジック。
+- **今後の拡張案**:
+  - 新しいプロジェクトの追加
+  - プロンプトテンプレートの微調整
 
-### 主要ファイル
+### 2.2 School Safety Checker
+- **状態**: 実装完了
+- **主要ファイル**:
+  - `src/App.tsx`: メインUI。状態管理（事案、チェックリスト、エリア、役割）を統合。
+  - `src/logic/generateOutput.ts`: ログ、振り返り、ChatGPT用プロンプトの生成ロジック。
+- **今後の拡張案**:
+  - チェックリストのカスタマイズ機能（学校ごとのルール対応）
+  - 捜索エリアの追加・編集機能
 
-| ファイル | 役割 |
-|----------|------|
-| `src/types.ts` | 型定義（Screen, Question, ScoreEntry, AnswerSheet 等） |
-| `src/data/dummyData.ts` | 架空テスト・架空答案のダミーデータ |
-| `src/index.css` | 全画面共通のデザインシステム（CSS変数・コンポーネントクラス） |
+### 2.3 MaruFlow MVP Mock
+- **状態**: モック実装完了（実データ・AI連携なし）
+- **主要ファイル**:
+  - `src/App.tsx`: 5つの画面（Home, Upload, Setting, Grading, Output）の切り替え。
+  - `src/components/`: 各画面のコンポーネント。
+- **今後の拡張案**:
+  - 実データ連携の検討
+  - AI採点API（OpenAI等）との連携プロトタイプ作成（別アプリとして切り出すことを推奨）
 
-### 実行方法
+## 3. 各エージェントでの継続開発方法
 
-```bash
-cd apps/maruflow-mock
-pnpm install   # 初回のみ
-pnpm dev       # 開発サーバー起動 → http://localhost:5173
-pnpm build     # 本番ビルド → dist/
-pnpm preview   # ビルド結果のプレビュー
-```
+### Codex を使う場合
+Codexはローカルファイルシステムに直接アクセスできるため、コードの修正・ビルド確認に最適です。
+1. `ryon-project-command-tools` リポジトリをVSCodeで開く
+2. Codexのチャットで以下のように依頼する：
+   > `apps/today-work-selector/src/data/projects.ts` に新しいプロジェクトを追加してください。
+3. Codexがファイルを修正したら、ターミナルで `cd apps/today-work-selector && pnpm build` を実行してエラーがないか確認する。
 
-### MVP 対象・非対象
+### Claude Code を使う場合
+Claude Codeもローカルで動作するため、複雑なロジックの修正や設計の相談に向いています。
+1. ターミナルで `ryon-project-command-tools` ディレクトリに移動
+2. `claude` コマンドを起動し、以下のように依頼する：
+   > `apps/school-safety-checker` のチェックリスト項目をカスタマイズできるようにしたい。設計案と修正すべきファイルを教えて。
 
-| 区分 | 機能 |
-|------|------|
-| **MVP（実装済み）** | 手動採点（丸・バツ・三角・点数・コメント）、採点欄定義、結果サマリー、PDF出力（モック） |
-| **次フェーズ** | AI採点、OCR、クラス管理、成績分析ダッシュボード |
+### ChatGPT を使う場合
+ChatGPTはコードの直接編集ができないため、設計相談やプロンプト生成ロジックの改善に使用します。
+1. `Today Work Selector` で生成された「ChatGPT用プロンプト」を貼り付ける
+2. ChatGPTからの提案を受け取り、手動（またはCodex）でコードに反映する
 
-### 注意事項
-
-- 実際のPDF処理（読み込み・生成）は未実装です。架空のダミーデータで画面の見た目を構築しています。
-- 個人情報・実児童データは一切含まれていません。
-
----
-
-## 全アプリ共通: Codex / Claude Code / ChatGPT で引き継ぐ方法
-
-### Codex で引き継ぐ場合
-
-```markdown
-# ryon-project-command-tools 開発引き継ぎ
-
-## 概要
-このリポジトリは React + Vite + TypeScript で構築された静的Webアプリ群です。
-
-## 対象アプリ
-apps/maruflow-mock/ — 採点支援アプリ MaruFlow の MVP モック
-
-## 依頼内容
-（ここに追加したい機能や修正したいバグを記載してください）
-
-## 制約事項
-- 外部APIや秘密情報は使用しない
-- 個人情報・実児童データを扱わない
-- 変更後は必ず `pnpm build` でTypeScriptエラーがないか確認する
-```
-
-### Claude Code で引き継ぐ場合
-
-```markdown
-# MaruFlow MVP Mock アーキテクチャ引き継ぎ
-
-## 概要
-React + Vite の静的Webアプリです。
-- 型定義: `src/types.ts`
-- ダミーデータ: `src/data/dummyData.ts`
-- 画面コンポーネント: `src/screens/`
-- グローバルCSS: `src/index.css`
-
-## 依頼内容
-（例：採点画面にキーボードショートカット（○=1キー、×=2キー）を追加したい）
-```
-
-### ChatGPT で引き継ぐ場合
-
-```markdown
-# MaruFlow MVP Mock UI改善
-
-## 概要
-紙テスト採点支援アプリのUIモックです。
-採点画面（`src/screens/ScoringScreen.tsx`）のUIを改善したいです。
-
-## 依頼内容
-（例：採点画面のモバイル対応を改善し、タブレットでの操作性を向上させたい）
-```
-
----
-
-## デプロイ方法（各アプリ共通）
-
-```bash
-# ビルド
-cd apps/<app-name>
-pnpm build
-
-# dist/ ディレクトリを GitHub Pages / Netlify にデプロイ
-# Netlify の場合:
-#   Base directory: apps/<app-name>
-#   Build command:  pnpm build
-#   Publish directory: dist
-```
+## 4. デプロイに関する注意
+GitHub Pages にデプロイする場合、Vite の `base` オプションを適切に設定する必要があります。
+`vite.config.ts` で `base: '/ryon-project-command-tools/'` のようにリポジトリ名を指定してください（ルートドメインにデプロイする場合は不要です）。

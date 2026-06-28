@@ -8,7 +8,7 @@ function formatProjectList(projects: Project[]): string {
   return projects
     .map(
       (p, i) =>
-        `${i + 1}. **${p.name}**（${p.area}）\n   - 次のアクション: ${p.nextAction}\n   - 出力形式: ${p.outputType.join('、')}`
+        `${i + 1}. **${p.name}**（${p.area}）\n   - 次のアクション: ${p.nextAction}\n   - 出力形式: ${p.outputTypes.join('、')}`
     )
     .join('\n');
 }
@@ -50,15 +50,15 @@ function getDoNotDo(state: TodayState): string {
 }
 
 function getOutputs(projects: Project[]): string {
-  const types = [...new Set(projects.flatMap((p) => p.outputType))];
+  const types = [...new Set(projects.flatMap((p) => p.outputTypes))];
   return types.map((t) => `- ${t}`).join('\n');
 }
 
 function getReturnTo(projects: Project[]): string {
   const items: string[] = [];
-  const hasGitHub = projects.some((p) => p.outputType.includes('GitHub'));
-  const hasNotion = projects.some((p) => p.outputType.includes('Notion'));
-  const hasMarkdown = projects.some((p) => p.outputType.includes('Markdown'));
+  const hasGitHub = projects.some((p) => p.outputTypes.includes('GitHub'));
+  const hasNotion = projects.some((p) => p.outputTypes.includes('Notion'));
+  const hasMarkdown = projects.some((p) => p.outputTypes.includes('Markdown'));
 
   if (hasGitHub) items.push('GitHub: 作業ログ・コード変更をコミット＆push');
   if (hasNotion) items.push('Notion: 作業内容・決定事項を該当ページに記録');
@@ -147,7 +147,7 @@ ${baseContext}
 以下の作業をCodexで進めます。具体的なコマンドやファイル操作を教えてください：
 
 ${projects
-  .filter((p) => p.recommendedContext.includes('Codexあり'))
+  .filter((p) => p.recommendedContexts.includes('Codexあり'))
   .map((p) => `- **${p.name}**: ${p.nextAction}`)
   .join('\n') || projects.map((p) => `- **${p.name}**: ${p.nextAction}`).join('\n')}
 
@@ -170,7 +170,7 @@ ${baseContext}
 以下の作業をClaude Codeで進めます：
 
 ${projects
-  .filter((p) => p.recommendedContext.includes('Claude Codeあり'))
+  .filter((p) => p.recommendedContexts.includes('Claude Codeあり'))
   .map((p) => `- **${p.name}**: ${p.nextAction}`)
   .join('\n') || projects.map((p) => `- **${p.name}**: ${p.nextAction}`).join('\n')}
 
@@ -192,7 +192,7 @@ ${baseContext}
 以下の作業をManusで進めます：
 
 ${projects
-  .filter((p) => p.recommendedContext.includes('Manusあり'))
+  .filter((p) => p.recommendedContexts.includes('Manusあり'))
   .map((p) => `- **${p.name}**: ${p.nextAction}`)
   .join('\n') || projects.map((p) => `- **${p.name}**: ${p.nextAction}`).join('\n')}
 

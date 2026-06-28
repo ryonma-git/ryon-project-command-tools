@@ -103,16 +103,22 @@ function ProjectRow({ p }: { p: Project }) {
           </div>
           <div style={{ marginBottom: '4px' }}>
             <strong>出力形式：</strong>
-            {p.outputType.join('、')}
+            {p.outputTypes.join('、')}
           </div>
           <div style={{ marginBottom: '4px' }}>
             <strong>推奨エージェント：</strong>
-            {p.recommendedContext.join('、')}
+            {p.recommendedContexts.join('、')}
           </div>
           {p.preferredLocation && (
             <div style={{ marginBottom: '4px' }}>
               <strong>推奨場所：</strong>
               {p.preferredLocation.join('、')}
+            </div>
+          )}
+          {p.suitableFor && (
+            <div style={{ marginBottom: '4px' }}>
+              <strong>向いている状況：</strong>
+              {p.suitableFor}
             </div>
           )}
           {p.notes && (

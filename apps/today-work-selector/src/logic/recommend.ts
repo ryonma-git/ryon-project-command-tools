@@ -37,7 +37,7 @@ function calcScore(p: Project, state: TodayState): number {
     if (p.energy === '中') score += 4;
     if (p.energy === '高') score -= 6;
     if (p.area === '記録') score += 6;
-    if (p.outputType.includes('Markdown')) score += 4;
+    if (p.outputTypes.includes('Markdown')) score += 4;
   } else if (state.energy === '中') {
     if (p.energy === '低') score += 6;
     if (p.energy === '中') score += 10;
@@ -47,7 +47,7 @@ function calcScore(p: Project, state: TodayState): number {
     if (p.energy === '高') score += 12;
     if (p.energy === '中') score += 6;
     if (p.area === '開発') score += 6;
-    if (p.outputType.includes('コード')) score += 4;
+    if (p.outputTypes.includes('コード')) score += 4;
   }
 
   // ---- 時間マッチング ----
@@ -55,15 +55,15 @@ function calcScore(p: Project, state: TodayState): number {
     // 短時間は記録・整理系
     if (p.energy === '低') score += 8;
     if (p.area === '記録') score += 6;
-    if (p.outputType.includes('Markdown')) score += 4;
-    if (p.outputType.includes('コード')) score -= 4;
+    if (p.outputTypes.includes('Markdown')) score += 4;
+    if (p.outputTypes.includes('コード')) score -= 4;
   } else if (state.time === '1時間') {
     if (p.energy === '中') score += 6;
   } else {
     // 2時間以上は設計・実装系
     if (state.energy !== '低') {
       if (p.energy === '高') score += 8;
-      if (p.outputType.includes('コード')) score += 6;
+      if (p.outputTypes.includes('コード')) score += 6;
       if (p.area === '開発') score += 4;
     }
   }
@@ -87,19 +87,19 @@ function calcScore(p: Project, state: TodayState): number {
 
   // ---- エージェントマッチング ----
   if (state.agent === 'Codexあり') {
-    if (p.recommendedContext.includes('Codexあり')) score += 8;
-    if (p.outputType.includes('Markdown')) score += 4;
-    if (p.outputType.includes('GitHub')) score += 4;
-    if (p.outputType.includes('コード')) score += 4;
+    if (p.recommendedContexts.includes('Codexあり')) score += 8;
+    if (p.outputTypes.includes('Markdown')) score += 4;
+    if (p.outputTypes.includes('GitHub')) score += 4;
+    if (p.outputTypes.includes('コード')) score += 4;
   } else if (state.agent === 'Claude Codeあり') {
-    if (p.recommendedContext.includes('Claude Codeあり')) score += 8;
-    if (p.outputType.includes('Notion')) score += 4;
+    if (p.recommendedContexts.includes('Claude Codeあり')) score += 8;
+    if (p.outputTypes.includes('Notion')) score += 4;
   } else if (state.agent === 'Manusあり') {
-    if (p.recommendedContext.includes('Manusあり')) score += 8;
+    if (p.recommendedContexts.includes('Manusあり')) score += 8;
     if (p.area === '開発') score += 4;
-    if (p.outputType.includes('コード')) score += 4;
+    if (p.outputTypes.includes('コード')) score += 4;
   } else if (state.agent === 'ChatGPTのみ') {
-    if (p.recommendedContext.includes('ChatGPTのみ')) score += 6;
+    if (p.recommendedContexts.includes('ChatGPTのみ')) score += 6;
     if (p.energy === '低') score += 4;
   }
 
@@ -111,17 +111,17 @@ function calcScore(p: Project, state: TodayState): number {
       break;
     case '記録だけしたい':
       if (p.area === '記録') score += 12;
-      if (p.outputType.includes('Markdown')) score += 6;
+      if (p.outputTypes.includes('Markdown')) score += 6;
       if (p.energy === '低') score += 6;
       break;
     case '実装したい':
       if (p.area === '開発') score += 12;
-      if (p.outputType.includes('コード')) score += 8;
+      if (p.outputTypes.includes('コード')) score += 8;
       if (p.energy === '高') score += 4;
       break;
     case '授業を考えたい':
       if (p.area === '授業') score += 12;
-      if (p.outputType.includes('アイデア')) score += 6;
+      if (p.outputTypes.includes('アイデア')) score += 6;
       break;
     case '校務を片付けたい':
       if (p.area === '校務') score += 12;

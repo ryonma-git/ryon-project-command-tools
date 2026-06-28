@@ -60,12 +60,23 @@ export function RecommendSection({ projects }: Props) {
               <span className="badge badge-energy">
                 気力：{p.energy}
               </span>
-              {p.outputType.slice(0, 2).map((t) => (
+              {p.outputTypes.slice(0, 2).map((t) => (
                 <span key={t} className="badge badge-output">
                   {t}
                 </span>
               ))}
             </div>
+            {p.suitableFor && (
+              <div
+                style={{
+                  marginTop: '6px',
+                  fontSize: '0.78rem',
+                  color: 'var(--color-primary)',
+                }}
+              >
+                ✓ {p.suitableFor}
+              </div>
+            )}
             {p.notes && (
               <div
                 style={{

@@ -39,6 +39,16 @@ export type OutputType =
   | 'アイデア'
   | '会話';
 
+export type RiskLevel = 'low' | 'medium' | 'high';
+
+/** プロジェクト固有のプロンプトテンプレート */
+export interface ProjectPrompts {
+  chatgpt?: string;
+  codex?: string;
+  claudeCode?: string;
+  manus?: string;
+}
+
 export interface Project {
   id: string;
   name: string;
@@ -47,10 +57,22 @@ export interface Project {
   priority: Priority;
   energy: EnergyRequired;
   nextAction: string;
-  recommendedContext: AgentAvailability[];
-  outputType: OutputType[];
+  /** @deprecated Use recommendedContexts */
+  recommendedContext?: AgentAvailability[];
+  /** 推奨エージェント（複数） */
+  recommendedContexts: AgentAvailability[];
+  /** @deprecated Use outputTypes */
+  outputType?: OutputType[];
+  /** 出力形式（複数） */
+  outputTypes: OutputType[];
   notes: string;
   preferredLocation?: Location[];
+  /** リスクレベル */
+  risk?: RiskLevel;
+  /** このプロジェクトに向いている状況・条件 */
+  suitableFor?: string;
+  /** プロジェクト固有のプロンプトテンプレート */
+  prompts?: ProjectPrompts;
 }
 
 export interface TodayState {

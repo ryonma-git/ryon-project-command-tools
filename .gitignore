@@ -41,3 +41,4 @@ coverage/
 
 # Misc
 *.local
+apps/today-work-selector/src/data/*.bak
